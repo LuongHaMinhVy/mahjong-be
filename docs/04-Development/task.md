@@ -40,4 +40,4 @@
 | 37 | Users - Application Layer - GetMatchHistoryUseCase | completed |
 | 38 | Users - Infrastructure Layer - PrismaUserStatsRepository | completed |
 | 39 | Users - Presentation Layer - DTOs & Controller | completed |
-| 40 | Users - Module Registration & App Integration | in_progress |
+| 40 | Users - Module Registration & App Integration | completed |
