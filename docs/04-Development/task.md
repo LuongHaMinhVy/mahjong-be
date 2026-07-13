@@ -25,4 +25,14 @@
 | 22 | Google OAuth2 - Implement GoogleAuthService (Infrastructure Adapter) | completed |
 | 23 | Google OAuth2 - Create GoogleLoginUseCase (Application Layer) | completed |
 | 24 | Google OAuth2 - Register DTO, Route, and Update AuthModule | completed |
+| 25 | Mahjong - Tile & Meld Value Objects | not_started |
+| 26 | Mahjong - IRuleset Port Interface | not_started |
+| 27 | Mahjong - GameState & PlayerState Entities | not_started |
+| 28 | Mahjong - Core GameEngine Domain Service | not_started |
+| 29 | Mahjong - RiichiRuleset Implementation | not_started |
+| 30 | Mahjong - ChineseRuleset Implementation | not_started |
+| 31 | Mahjong - Repositories & Database Schema Update | not_started |
+| 32 | Mahjong - Application Layer Use Cases | not_started |
+| 33 | Mahjong - WebSocket Gateway & Module Registration | not_started |
+
 
