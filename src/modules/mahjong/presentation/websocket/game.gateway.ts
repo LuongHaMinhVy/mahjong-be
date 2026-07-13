@@ -76,10 +76,17 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('game:start')
   async handleStartGame(
     @ConnectedSocket() client: Socket & { user: JwtPayload },
-    @MessageBody() data: { roomId: string; ruleset: 'riichi' | 'chinese'; playerIds: string[] },
+    @MessageBody()
+    data: {
+      roomId: string;
+      ruleset: 'riichi' | 'chinese';
+      playerIds: string[];
+    },
   ) {
     const userId = client.user.sub;
-    this.logger.log(`User ${userId} requested starting game for room ${data.roomId}`);
+    this.logger.log(
+      `User ${userId} requested starting game for room ${data.roomId}`,
+    );
 
     try {
       const state = await this.startGameUseCase.execute({
@@ -145,11 +152,17 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('game:claim')
   async handleClaimMeld(
     @ConnectedSocket() client: Socket & { user: JwtPayload },
-    @MessageBody() data: {
+    @MessageBody()
+    data: {
       gameId: string;
       meldType: MeldType;
       claimedTile: { suit: string; value: number; type: string; id: string };
-      handTilesToUse: Array<{ suit: string; value: number; type: string; id: string }>;
+      handTilesToUse: Array<{
+        suit: string;
+        value: number;
+        type: string;
+        id: string;
+      }>;
     },
   ) {
     const userId = client.user.sub;
@@ -186,7 +199,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('game:win')
   async handleDeclareWin(
     @ConnectedSocket() client: Socket & { user: JwtPayload },
-    @MessageBody() data: {
+    @MessageBody()
+    data: {
       gameId: string;
       isSelfDraw: boolean;
       discarderId?: string;
