@@ -11,6 +11,7 @@ import { DrawTileUseCase } from './application/use-cases/draw-tile.use-case.js';
 import { DiscardTileUseCase } from './application/use-cases/discard-tile.use-case.js';
 import { ClaimMeldUseCase } from './application/use-cases/claim-meld.use-case.js';
 import { DeclareWinUseCase } from './application/use-cases/declare-win.use-case.js';
+import { GameGateway } from './presentation/websocket/game.gateway.js';
 
 const USE_CASES = [
   StartGameUseCase,
@@ -32,7 +33,13 @@ const USE_CASES = [
       useClass: PrismaGameResultRepository,
     },
     ...USE_CASES,
+    GameGateway,
   ],
-  exports: [IGameStateRepository, IGameResultRepository, ...USE_CASES],
+  exports: [
+    IGameStateRepository,
+    IGameResultRepository,
+    ...USE_CASES,
+    GameGateway,
+  ],
 })
 export class MahjongModule {}
