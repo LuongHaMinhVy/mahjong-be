@@ -1,1 +1,3 @@
-export * from './ws-auth.guard';
+import { WsAuthGuard } from './ws-auth.guard.js';
+
+export { WsAuthGuard };

@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppModule } from './app.module';
-import { GlobalExceptionFilter } from './shared/exceptions';
+import { AppModule } from './app.module.js';
+import { GlobalExceptionFilter } from './shared/exceptions/index.js';
+import { ResponseInterceptor } from './shared/interceptors/response.interceptor.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,6 +23,9 @@ async function bootstrap() {
   // Global exception filter
   app.useGlobalFilters(new GlobalExceptionFilter());
 
+  // Global response interceptor
+  app.useGlobalInterceptors(new ResponseInterceptor());
+
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('Mahjong Game API')
@@ -30,7 +34,7 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('docs', app, documentFactory);
 
   await app.listen(process.env.PORT ?? 3000);
 }

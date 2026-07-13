@@ -1,4 +1,4 @@
-import { ErrorCode } from '../constants/error-codes';
+import { type ErrorCode } from '../constants/error-codes.js';
 
 export class DomainException extends Error {
   constructor(

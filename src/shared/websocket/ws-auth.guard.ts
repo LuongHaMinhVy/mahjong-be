@@ -4,16 +4,16 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtTokenService } from '../../modules/auth/infrastructure/token/jwt-token.service.js';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { JwtPayload } from '../decorators/current-user.decorator';
+import { JwtPayload } from '../decorators/current-user.decorator.js';
 
 @Injectable()
 export class WsAuthGuard implements CanActivate {
   private readonly logger = new Logger(WsAuthGuard.name);
 
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtTokenService: JwtTokenService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const client: Socket & { user?: JwtPayload } = context
@@ -26,7 +26,7 @@ export class WsAuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync<JwtPayload>(token);
+      const payload = await this.jwtTokenService.verifyAccessToken(token);
       client.user = payload;
       return true;
     } catch {
