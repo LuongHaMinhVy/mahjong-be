@@ -95,6 +95,11 @@ export class User {
     this.touch();
   }
 
+  public updateElo(newElo: number): void {
+    this._elo = newElo;
+    this.touch();
+  }
+
   public verifyPassword(plainText: string): boolean {
     return this._password.compare(plainText);
   }

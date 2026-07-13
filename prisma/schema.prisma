@@ -20,6 +20,7 @@ model User {
   createdAt       DateTime       @default(now()) @map("created_at")
   updatedAt       DateTime       @updatedAt @map("updated_at")
   refreshTokens   RefreshToken[]
+  gameResults     GameResult[]   @relation("WinnerRelation")
 
   @@map("users")
 }
@@ -34,4 +35,17 @@ model RefreshToken {
   user      User      @relation(fields: [userId], references: [id])
 
   @@map("refresh_tokens")
+}
+
+model GameResult {
+  id          String   @id @default(uuid())
+  roomId      String   @map("room_id")
+  rulesetName String   @map("ruleset_name")
+  winnerId    String?  @map("winner_id")
+  playersJson Json     @map("players_json")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  winner      User?    @relation("WinnerRelation", fields: [winnerId], references: [id])
+
+  @@map("game_results")
 }
