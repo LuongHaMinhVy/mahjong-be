@@ -9,6 +9,12 @@ export const ErrorCodes = {
   NOT_FOUND: 'NOT_FOUND',
   VALIDATION_ERROR: 'VALIDATION_ERROR',
   INTERNAL_ERROR: 'INTERNAL_ERROR',
+
+  // Lobby & Room
+  ROOM_FULL: 'ROOM_FULL',
+  ALREADY_IN_ROOM: 'ALREADY_IN_ROOM',
+  PLAYER_NOT_IN_ROOM: 'PLAYER_NOT_IN_ROOM',
+  CANNOT_START: 'CANNOT_START',
 } as const;
 
 export type ErrorCode = (typeof ErrorCodes)[keyof typeof ErrorCodes];
