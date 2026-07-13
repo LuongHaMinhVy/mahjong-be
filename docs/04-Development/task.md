@@ -35,8 +35,8 @@
 | 32 | Mahjong - Application Layer Use Cases | completed |
 | 33 | Mahjong - WebSocket Gateway & Module Registration | completed |
 | 34 | Users - Domain Layer - UserStats VO & Repositories | completed |
-| 35 | Users - Application Layer - GetUserProfileUseCase | in_progress |
-| 36 | Users - Application Layer - UpdateUserProfileUseCase | not_started |
+| 35 | Users - Application Layer - GetUserProfileUseCase | completed |
+| 36 | Users - Application Layer - UpdateUserProfileUseCase | in_progress |
 | 37 | Users - Application Layer - GetMatchHistoryUseCase | not_started |
 | 38 | Users - Infrastructure Layer - PrismaUserStatsRepository | not_started |
 | 39 | Users - Presentation Layer - DTOs & Controller | not_started |
