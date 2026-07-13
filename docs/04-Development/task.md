@@ -38,6 +38,6 @@
 | 35 | Users - Application Layer - GetUserProfileUseCase | completed |
 | 36 | Users - Application Layer - UpdateUserProfileUseCase | completed |
 | 37 | Users - Application Layer - GetMatchHistoryUseCase | completed |
-| 38 | Users - Infrastructure Layer - PrismaUserStatsRepository | in_progress |
-| 39 | Users - Presentation Layer - DTOs & Controller | not_started |
+| 38 | Users - Infrastructure Layer - PrismaUserStatsRepository | completed |
+| 39 | Users - Presentation Layer - DTOs & Controller | in_progress |
 | 40 | Users - Module Registration & App Integration | not_started |
