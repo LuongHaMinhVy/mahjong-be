@@ -41,3 +41,14 @@
 | 38 | Users - Infrastructure Layer - PrismaUserStatsRepository | completed |
 | 39 | Users - Presentation Layer - DTOs & Controller | completed |
 | 40 | Users - Module Registration & App Integration | completed |
+| 41 | Lobby & Room - User Schema Update (Admin Role) | not_started |
+| 42 | Lobby & Room - Room Player Value Object | not_started |
+| 43 | Lobby & Room - Room Entity | not_started |
+| 44 | Lobby & Room - Room Repository Interface | not_started |
+| 45 | Lobby & Room - Room Use Cases | not_started |
+| 46 | Lobby & Room - Infrastructure - Redis Room Repository | not_started |
+| 47 | Lobby & Room - Lobby Service | not_started |
+| 48 | Lobby & Room - Room & Lobby Gateways | not_started |
+| 49 | Lobby & Room - Module Registration & App Integration | not_started |
+| 50 | Lobby & Room - Integration Verification | not_started |
+
