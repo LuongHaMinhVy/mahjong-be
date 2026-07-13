@@ -18,7 +18,7 @@ export interface UserProfileResponse {
 export class GetUserProfileUseCase {
   constructor(
     private readonly userRepo: IUserRepository,
-    private readonly userStatsRepo: IUserStatsRepository
+    private readonly userStatsRepo: IUserStatsRepository,
   ) {}
 
   async execute(userId: string): Promise<UserProfileResponse> {
