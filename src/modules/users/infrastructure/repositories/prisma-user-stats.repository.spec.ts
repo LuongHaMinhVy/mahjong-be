@@ -23,11 +23,16 @@ describe('PrismaUserStatsRepository', () => {
     it('should throw if user not found', async () => {
       mockPrisma.user.findUnique.mockResolvedValue(null);
 
-      await expect(repository.getStats('invalid')).rejects.toThrow('User not found');
+      await expect(repository.getStats('invalid')).rejects.toThrow(
+        'User not found',
+      );
     });
 
     it('should compute stats correctly', async () => {
-      mockPrisma.user.findUnique.mockResolvedValue({ id: 'user-123', elo: 1100 } as any);
+      mockPrisma.user.findUnique.mockResolvedValue({
+        id: 'user-123',
+        elo: 1100,
+      } as any);
       mockPrisma.gameResult.findMany.mockResolvedValue([
         {
           id: 'g1',

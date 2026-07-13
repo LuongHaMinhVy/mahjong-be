@@ -4,6 +4,7 @@ import { PrismaModule } from './shared/database/prisma.module.js';
 import { RedisModule } from './shared/redis/redis.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { MahjongModule } from './modules/mahjong/mahjong.module.js';
+import { UsersModule } from './modules/users/users.module.js';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { MahjongModule } from './modules/mahjong/mahjong.module.js';
     RedisModule,
     AuthModule,
     MahjongModule,
+    UsersModule,
   ],
 })
 export class AppModule {}
