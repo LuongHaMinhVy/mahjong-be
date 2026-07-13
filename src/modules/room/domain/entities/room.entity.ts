@@ -24,7 +24,10 @@ export class Room {
   removePlayer(userId: string): void {
     const index = this.players.findIndex((p) => p.userId === userId);
     if (index === -1) {
-      throw new DomainException('PLAYER_NOT_IN_ROOM', 'Player not found in room');
+      throw new DomainException(
+        'PLAYER_NOT_IN_ROOM',
+        'Player not found in room',
+      );
     }
     this.players.splice(index, 1);
 
@@ -36,7 +39,10 @@ export class Room {
   toggleReady(userId: string, isReady: boolean): void {
     const player = this.players.find((p) => p.userId === userId);
     if (!player) {
-      throw new DomainException('PLAYER_NOT_IN_ROOM', 'Player not found in room');
+      throw new DomainException(
+        'PLAYER_NOT_IN_ROOM',
+        'Player not found in room',
+      );
     }
     player.isReady = isReady;
   }

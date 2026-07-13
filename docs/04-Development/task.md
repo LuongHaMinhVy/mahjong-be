@@ -47,8 +47,8 @@
 | 44 | Lobby & Room - Room Repository Interface | completed |
 | 45 | Lobby & Room - Room Use Cases | completed |
 | 46 | Lobby & Room - Infrastructure - Redis Room Repository | completed |
-| 47 | Lobby & Room - Lobby Service | not_started |
-| 48 | Lobby & Room - Room & Lobby Gateways | not_started |
-| 49 | Lobby & Room - Module Registration & App Integration | not_started |
+| 47 | Lobby & Room - Lobby Service | in_progress |
+| 48 | Lobby & Room - Room & Lobby Gateways | in_progress |
+| 49 | Lobby & Room - Module Registration & App Integration | in_progress |
 | 50 | Lobby & Room - Integration Verification | not_started |
 
