@@ -17,9 +17,11 @@ import { VerifyEmailUseCase } from '../../application/use-cases/verify-email.use
 import { LoginUseCase } from '../../application/use-cases/login.use-case.js';
 import { RefreshUseCase } from '../../application/use-cases/refresh.use-case.js';
 import { LogoutUseCase } from '../../application/use-cases/logout.use-case.js';
+import { GoogleLoginUseCase } from '../../application/use-cases/google-login.use-case.js';
 import { JwtGuard } from '../guards/jwt.guard.js';
 import { IUserRepository } from '../../domain/user.repository.js';
 import { ApiResponseDto } from '../../../../shared/dto/api-response.dto.js';
+import { GoogleLoginDto } from '../dto/google-login.dto.js';
 
 @Controller('auth')
 export class AuthController {
@@ -29,6 +31,7 @@ export class AuthController {
     private readonly loginUseCase: LoginUseCase,
     private readonly refreshUseCase: RefreshUseCase,
     private readonly logoutUseCase: LogoutUseCase,
+    private readonly googleLoginUseCase: GoogleLoginUseCase,
     private readonly userRepository: IUserRepository,
   ) {}
 
@@ -65,6 +68,27 @@ export class AuthController {
     });
 
     return new ApiResponseDto(true, 'Đăng nhập thành công', {
+      accessToken: result.accessToken,
+      user: result.user,
+    });
+  }
+
+  @Post('google')
+  async googleLogin(
+    @Body() dto: GoogleLoginDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const result = await this.googleLoginUseCase.execute(dto.idToken);
+
+    response.cookie('refresh_token', result.refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/auth/refresh',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return new ApiResponseDto(true, 'Đăng nhập Google thành công', {
       accessToken: result.accessToken,
       user: result.user,
     });

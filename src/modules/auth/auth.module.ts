@@ -14,6 +14,9 @@ import { RedisOtpService } from './infrastructure/otp/redis-otp.service.js';
 import { ResendEmailService } from './infrastructure/email/resend-email.service.js';
 import { SessionService } from './infrastructure/session/session.service.js';
 import { PrismaModule } from '../../shared/database/prisma.module.js';
+import { IGoogleAuthService } from './domain/google-auth.service.js';
+import { GoogleAuthService } from './infrastructure/identity/google-auth.service.js';
+import { GoogleLoginUseCase } from './application/use-cases/google-login.use-case.js';
 
 @Module({
   imports: [
@@ -34,6 +37,7 @@ import { PrismaModule } from '../../shared/database/prisma.module.js';
     LoginUseCase,
     RefreshUseCase,
     LogoutUseCase,
+    GoogleLoginUseCase,
     JwtTokenService,
     RedisOtpService,
     ResendEmailService,
@@ -41,6 +45,10 @@ import { PrismaModule } from '../../shared/database/prisma.module.js';
     {
       provide: IUserRepository,
       useClass: PrismaUserRepository,
+    },
+    {
+      provide: IGoogleAuthService,
+      useClass: GoogleAuthService,
     },
   ],
   exports: [JwtTokenService, IUserRepository],
