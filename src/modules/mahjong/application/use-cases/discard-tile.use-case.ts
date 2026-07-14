@@ -27,7 +27,14 @@ export class DiscardTileUseCase {
         : new ChineseRuleset();
     const engine = new GameEngine(ruleset);
 
+    const activePlayer = state.getCurrentPlayer();
+    const tile = activePlayer.hand.find((t) => t.id === dto.tileId);
+    if (!tile) {
+      throw new DomainException('NOT_FOUND', 'Tile not found in hand.');
+    }
+
     engine.discardTile(state, dto.playerId, dto.tileId);
+    state.addAction(dto.playerId, 'discard', tile);
     await this.gameStateRepository.save(state);
   }
 }

@@ -5,6 +5,7 @@ import { IGameStateRepository } from '../../domain/repositories/game-state.repos
 import { IGameResultRepository } from '../../domain/repositories/game-result.repository.js';
 import { IUserRepository } from '../../../auth/domain/user.repository.js';
 import { User } from '../../../auth/domain/user.entity.js';
+import { IGameReplayRepository } from '../../domain/repositories/game-replay.repository.js';
 import {
   GameResult,
   type GameResultPlayer,
@@ -25,6 +26,7 @@ export class DeclareWinUseCase {
     private readonly gameStateRepository: IGameStateRepository,
     private readonly gameResultRepository: IGameResultRepository,
     private readonly userRepository: IUserRepository,
+    private readonly gameReplayRepository: IGameReplayRepository,
   ) {}
 
   async execute(dto: DeclareWinDto): Promise<GameResult> {
@@ -97,6 +99,11 @@ export class DeclareWinUseCase {
       player.hand.push(winningTile);
     }
 
+    const winActionType = dto.isSelfDraw ? 'tsumo' : 'ron';
+    state.addAction(dto.playerId, winActionType, winningTile || undefined, {
+      scoreResult,
+    });
+
     // Load users to fetch current ELO and display name
     const userMap = new Map<
       string,
@@ -164,6 +171,7 @@ export class DeclareWinUseCase {
     );
 
     await this.gameResultRepository.save(gameResult);
+    await this.gameReplayRepository.save(resultId, state.actions);
     await this.gameStateRepository.delete(dto.gameId);
 
     return gameResult;

@@ -20,6 +20,21 @@ export class StartGameUseCase {
       dto.rulesetName === 'riichi' ? new RiichiRuleset() : new ChineseRuleset();
     const engine = new GameEngine(ruleset);
     const gameState = engine.initializeGame(dto.roomId, dto.playerIds);
+
+    const handsRepresentation = gameState.players.reduce((acc, p) => {
+      acc[p.userId] = p.hand.map(t => ({
+        suit: t.suit,
+        value: t.value,
+        type: t.type,
+        id: t.id,
+      }));
+      return acc;
+    }, {} as Record<string, any>);
+
+    gameState.addAction('system', 'deal', undefined, {
+      hands: handsRepresentation,
+    });
+
     await this.gameStateRepository.save(gameState);
     return gameState;
   }

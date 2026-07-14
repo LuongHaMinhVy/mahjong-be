@@ -27,6 +27,7 @@ export class DrawTileUseCase {
     const engine = new GameEngine(ruleset);
 
     const tile = engine.drawTile(state);
+    state.addAction(state.getCurrentPlayer().userId, 'draw', tile);
     await this.gameStateRepository.save(state);
     return tile;
   }

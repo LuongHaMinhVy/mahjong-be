@@ -38,6 +38,17 @@ export class ClaimMeldUseCase {
       dto.claimedTile,
       dto.handTilesToUse,
     );
+
+    const actionType = dto.meldType === 'closed-kan' ? 'kan' : (dto.meldType as any);
+    state.addAction(dto.playerId, actionType, dto.claimedTile, {
+      handTilesUsed: dto.handTilesToUse.map((t) => ({
+        suit: t.suit,
+        value: t.value,
+        type: t.type,
+        id: t.id,
+      })),
+    });
+
     await this.gameStateRepository.save(state);
   }
 }
