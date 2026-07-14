@@ -88,8 +88,8 @@
 | 85  | Replay - Database Schema Update                                        | completed |
 | 86  | Replay - Domain Layer - GameState Update                               | completed |
 | 87  | Replay - Infrastructure Layer - Redis Repository Update                | completed |
-| 88  | Replay - Domain & Infrastructure Layer - GameReplay Repository         | pending   |
-| 89  | Replay - Application Layer - Update Game Use Cases to Record Actions    | pending   |
-| 90  | Replay - Application & Presentation Layer - GetGameReplay              | pending   |
+| 88  | Replay - Domain & Infrastructure Layer - GameReplay Repository         | completed |
+| 89  | Replay - Application Layer - Update Game Use Cases to Record Actions    | completed |
+| 90  | Replay - Application & Presentation Layer - GetGameReplay              | completed |
 | 91  | Replay - Module Registration                                           | pending   |
 | 92  | Replay - Final Verification & Test Cleanup                             | pending   |
