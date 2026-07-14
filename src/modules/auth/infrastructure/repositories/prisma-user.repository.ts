@@ -20,6 +20,7 @@ export class PrismaUserRepository implements IUserRepository {
         elo: raw.elo,
         isEmailVerified: raw.isEmailVerified,
         role: raw.role,
+        locale: raw.locale,
         bannedUntil: raw.bannedUntil,
       },
       create: {
@@ -31,6 +32,7 @@ export class PrismaUserRepository implements IUserRepository {
         elo: raw.elo,
         isEmailVerified: raw.isEmailVerified,
         role: raw.role,
+        locale: raw.locale,
         bannedUntil: raw.bannedUntil,
       },
     });

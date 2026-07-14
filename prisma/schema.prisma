@@ -17,6 +17,7 @@ model User {
   avatar          String?
   elo             Int            @default(1000)
   role            String         @default("USER")
+  locale          String         @default("vi")
   isEmailVerified Boolean        @default(false) @map("is_email_verified")
   bannedUntil     DateTime?      @map("banned_until")
   createdAt       DateTime       @default(now()) @map("created_at")

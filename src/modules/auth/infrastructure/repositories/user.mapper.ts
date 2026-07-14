@@ -14,6 +14,7 @@ export class UserMapper {
       elo: raw.elo,
       isEmailVerified: raw.isEmailVerified,
       role: raw.role,
+      locale: raw.locale,
       bannedUntil: raw.bannedUntil,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
@@ -30,6 +31,7 @@ export class UserMapper {
       elo: domain.elo,
       isEmailVerified: domain.isEmailVerified,
       role: domain.role,
+      locale: domain.locale,
       bannedUntil: domain.bannedUntil,
     };
   }

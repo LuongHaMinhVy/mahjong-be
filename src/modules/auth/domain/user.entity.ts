@@ -12,6 +12,7 @@ export interface UserProps {
   elo?: number;
   isEmailVerified?: boolean;
   role?: string;
+  locale?: string;
   bannedUntil?: Date | null;
   createdAt?: Date;
   updatedAt?: Date;
@@ -26,6 +27,7 @@ export class User {
   private _elo: number;
   private _isEmailVerified: boolean;
   private _role: string;
+  private _locale: string;
   private _bannedUntil: Date | null;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
@@ -39,6 +41,7 @@ export class User {
     this._elo = props.elo ?? 1000;
     this._isEmailVerified = props.isEmailVerified ?? false;
     this._role = props.role || 'USER';
+    this._locale = props.locale || 'vi';
     this._bannedUntil = props.bannedUntil || null;
     this._createdAt = props.createdAt || new Date();
     this._updatedAt = props.updatedAt || new Date();
@@ -86,6 +89,10 @@ export class User {
 
   get bannedUntil(): Date | null {
     return this._bannedUntil;
+  }
+
+  get locale(): string {
+    return this._locale;
   }
 
   public verifyEmail(): void {
