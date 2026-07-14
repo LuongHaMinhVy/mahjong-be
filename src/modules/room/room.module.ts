@@ -8,7 +8,6 @@ import { JoinRoomUseCase } from './application/use-cases/join-room.use-case.js';
 import { LeaveRoomUseCase } from './application/use-cases/leave-room.use-case.js';
 import { ToggleReadyUseCase } from './application/use-cases/toggle-ready.use-case.js';
 import { StartGameUseCase } from './application/use-cases/start-game.use-case.js';
-import { LobbyService } from './application/services/lobby.service.js';
 import { RoomGateway } from './presentation/websocket/room.gateway.js';
 import { LobbyModule } from '../lobby/lobby.module.js';
 
@@ -32,9 +31,8 @@ const USE_CASES = [
       useClass: RedisRoomRepository,
     },
     ...USE_CASES,
-    LobbyService,
     RoomGateway,
   ],
-  exports: [IRoomRepository, ...USE_CASES, LobbyService, RoomGateway],
+  exports: [IRoomRepository, ...USE_CASES, RoomGateway],
 })
 export class RoomModule {}

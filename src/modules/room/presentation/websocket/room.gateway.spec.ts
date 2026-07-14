@@ -5,7 +5,7 @@ import { type JoinRoomUseCase } from '../../application/use-cases/join-room.use-
 import { type LeaveRoomUseCase } from '../../application/use-cases/leave-room.use-case.js';
 import { type ToggleReadyUseCase } from '../../application/use-cases/toggle-ready.use-case.js';
 import { type StartGameUseCase } from '../../application/use-cases/start-game.use-case.js';
-import { type LobbyService } from '../../application/services/lobby.service.js';
+
 import { Room } from '../../domain/entities/room.entity.js';
 import { RoomPlayer } from '../../domain/value-objects/room-player.vo.js';
 import { type IRoomRepository } from '../../domain/repositories/room.repository.js';
@@ -14,7 +14,6 @@ import { LobbyGateway } from '../../../lobby/presentation/websocket/lobby.gatewa
 
 describe('RoomGateway', () => {
   let gateway: RoomGateway;
-  let mockLobbyService: jest.Mocked<LobbyService>;
   let mockCreateRoomUseCase: jest.Mocked<CreateRoomUseCase>;
   let mockJoinRoomUseCase: jest.Mocked<JoinRoomUseCase>;
   let mockLeaveRoomUseCase: jest.Mocked<LeaveRoomUseCase>;
@@ -29,12 +28,6 @@ describe('RoomGateway', () => {
   let mockServer: any;
 
   beforeEach(() => {
-    mockLobbyService = {
-      setUserOnline: jest.fn(),
-      setUserOffline: jest.fn(),
-      joinQueue: jest.fn(),
-      leaveQueue: jest.fn(),
-    } as any;
 
     mockCreateRoomUseCase = { execute: jest.fn() } as any;
     mockJoinRoomUseCase = { execute: jest.fn() } as any;
@@ -64,7 +57,6 @@ describe('RoomGateway', () => {
     };
 
     gateway = new RoomGateway(
-      mockLobbyService,
       mockCreateRoomUseCase,
       mockJoinRoomUseCase,
       mockLeaveRoomUseCase,
@@ -139,27 +131,4 @@ describe('RoomGateway', () => {
     });
   });
 
-  describe('lobby:join_queue', () => {
-    it('should handle joining queue and broadcast match_found if match starts', async () => {
-      const room = new Room(
-        'r-123',
-        'Matchmaking Room',
-        'user-1',
-        'riichi',
-        'waiting',
-        [
-          new RoomPlayer('user-1', 'Host', null, 1000, false),
-          new RoomPlayer('user-2', 'P2', null, 1000, false),
-          new RoomPlayer('user-3', 'P3', null, 1000, false),
-          new RoomPlayer('user-4', 'P4', null, 1000, false),
-        ],
-      );
-      mockLobbyService.joinQueue.mockResolvedValue(room);
-
-      await gateway.handleJoinQueue(mockSocket);
-
-      expect(mockLobbyService.joinQueue).toHaveBeenCalledWith('user-1');
-      expect(mockServer.to).toHaveBeenCalledWith('r-123');
-    });
-  });
 });

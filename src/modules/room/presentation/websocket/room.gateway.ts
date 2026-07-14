@@ -15,7 +15,6 @@ import { JoinRoomUseCase } from '../../application/use-cases/join-room.use-case.
 import { LeaveRoomUseCase } from '../../application/use-cases/leave-room.use-case.js';
 import { ToggleReadyUseCase } from '../../application/use-cases/toggle-ready.use-case.js';
 import { StartGameUseCase } from '../../application/use-cases/start-game.use-case.js';
-import { LobbyService } from '../../application/services/lobby.service.js';
 import { JwtPayload } from '../../../../shared/decorators/current-user.decorator.js';
 import { Room } from '../../domain/entities/room.entity.js';
 import { JwtTokenService } from '../../../auth/infrastructure/token/jwt-token.service.js';
@@ -35,7 +34,6 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server!: Server;
 
   constructor(
-    private readonly lobbyService: LobbyService,
     private readonly createRoomUseCase: CreateRoomUseCase,
     private readonly joinRoomUseCase: JoinRoomUseCase,
     private readonly leaveRoomUseCase: LeaveRoomUseCase,
@@ -60,8 +58,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
           const payload = await this.jwtTokenService.verifyAccessToken(token);
           const clientWithUser = client as Socket & { user?: JwtPayload };
           clientWithUser.user = payload;
-          await this.lobbyService.setUserOnline(payload.sub);
-          this.logger.log(`User ${payload.sub} marked online via connection`);
+          this.logger.log(`User ${payload.sub} authenticated in /room`);
         } catch {
           // Ignored
         }
@@ -71,12 +68,6 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected from /room: ${client.id}`);
-    const clientWithUser = client as Socket & { user?: JwtPayload };
-    const userId = clientWithUser.user?.sub;
-    if (userId) {
-      await this.lobbyService.setUserOffline(userId);
-      this.logger.log(`User ${userId} marked offline via disconnect`);
-    }
   }
 
   @UseGuards(WsAuthGuard)
@@ -212,44 +203,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  @UseGuards(WsAuthGuard)
-  @SubscribeMessage('lobby:join_queue')
-  async handleJoinQueue(
-    @ConnectedSocket() client: Socket & { user: JwtPayload },
-  ) {
-    const userId = client.user.sub;
-    try {
-      const room = await this.lobbyService.joinQueue(userId);
-      if (room) {
-        // Match found!
-        this.server
-          .to(room.id)
-          .emit('lobby:match_found', this.formatRoom(room));
-      } else {
-        client.emit('lobby:queue_joined');
-      }
-    } catch (err) {
-      const msg = this.getErrorMessage(err);
-      this.logger.error(`Lobby join queue failed: ${msg}`);
-      client.emit('error', msg);
-    }
-  }
 
-  @UseGuards(WsAuthGuard)
-  @SubscribeMessage('lobby:leave_queue')
-  async handleLeaveQueue(
-    @ConnectedSocket() client: Socket & { user: JwtPayload },
-  ) {
-    const userId = client.user.sub;
-    try {
-      await this.lobbyService.leaveQueue(userId);
-      client.emit('lobby:queue_left');
-    } catch (err) {
-      const msg = this.getErrorMessage(err);
-      this.logger.error(`Lobby leave queue failed: ${msg}`);
-      client.emit('error', msg);
-    }
-  }
 
   private broadcastRoomUpdate(roomId: string, room: Room) {
     this.server.to(roomId).emit('room:updated', this.formatRoom(room));
