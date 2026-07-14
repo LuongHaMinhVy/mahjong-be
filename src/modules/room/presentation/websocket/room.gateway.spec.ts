@@ -10,6 +10,8 @@ import { Room } from '../../domain/entities/room.entity.js';
 import { RoomPlayer } from '../../domain/value-objects/room-player.vo.js';
 import { type IRoomRepository } from '../../domain/repositories/room.repository.js';
 
+import { LobbyGateway } from '../../../lobby/presentation/websocket/lobby.gateway.js';
+
 describe('RoomGateway', () => {
   let gateway: RoomGateway;
   let mockLobbyService: jest.Mocked<LobbyService>;
@@ -19,6 +21,9 @@ describe('RoomGateway', () => {
   let mockToggleReadyUseCase: jest.Mocked<ToggleReadyUseCase>;
   let mockStartGameUseCase: jest.Mocked<StartGameUseCase>;
   let mockRoomRepository: jest.Mocked<IRoomRepository>;
+  let mockLobbyGateway: {
+    broadcastRooms: jest.Mock;
+  };
 
   let mockSocket: any;
   let mockServer: any;
@@ -39,6 +44,10 @@ describe('RoomGateway', () => {
     mockRoomRepository = {
       findById: jest.fn(),
     } as any;
+
+    mockLobbyGateway = {
+      broadcastRooms: jest.fn().mockResolvedValue(undefined as any),
+    };
 
     mockSocket = {
       id: 'socket-1',
@@ -62,6 +71,7 @@ describe('RoomGateway', () => {
       mockToggleReadyUseCase,
       mockStartGameUseCase,
       mockRoomRepository,
+      mockLobbyGateway as any,
     );
     gateway.server = mockServer;
   });
@@ -92,6 +102,7 @@ describe('RoomGateway', () => {
       });
       expect(mockSocket.join).toHaveBeenCalledWith('r-1');
       expect(mockServer.to).toHaveBeenCalledWith('r-1');
+      expect(mockLobbyGateway.broadcastRooms).toHaveBeenCalledWith('riichi');
     });
 
     it('should emit error when room creation fails', async () => {
@@ -124,6 +135,7 @@ describe('RoomGateway', () => {
       });
       expect(mockSocket.join).toHaveBeenCalledWith('r-1');
       expect(mockServer.to).toHaveBeenCalledWith('r-1');
+      expect(mockLobbyGateway.broadcastRooms).toHaveBeenCalledWith('riichi');
     });
   });
 

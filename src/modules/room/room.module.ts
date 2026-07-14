@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { PrismaModule } from '../../shared/database/prisma.module.js';
 import { AuthModule } from '../auth/auth.module.js';
 import { IRoomRepository } from './domain/repositories/room.repository.js';
@@ -10,6 +10,7 @@ import { ToggleReadyUseCase } from './application/use-cases/toggle-ready.use-cas
 import { StartGameUseCase } from './application/use-cases/start-game.use-case.js';
 import { LobbyService } from './application/services/lobby.service.js';
 import { RoomGateway } from './presentation/websocket/room.gateway.js';
+import { LobbyModule } from '../lobby/lobby.module.js';
 
 const USE_CASES = [
   CreateRoomUseCase,
@@ -20,7 +21,11 @@ const USE_CASES = [
 ];
 
 @Module({
-  imports: [PrismaModule, AuthModule],
+  imports: [
+    PrismaModule,
+    AuthModule,
+    forwardRef(() => LobbyModule),
+  ],
   providers: [
     {
       provide: IRoomRepository,

@@ -8,7 +8,7 @@ import {
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { UseGuards, Logger } from '@nestjs/common';
+import { UseGuards, Logger, Inject, forwardRef } from '@nestjs/common';
 import { WsAuthGuard } from '../../../../shared/websocket/ws-auth.guard.js';
 import { CreateRoomUseCase } from '../../application/use-cases/create-room.use-case.js';
 import { JoinRoomUseCase } from '../../application/use-cases/join-room.use-case.js';
@@ -20,6 +20,7 @@ import { JwtPayload } from '../../../../shared/decorators/current-user.decorator
 import { Room } from '../../domain/entities/room.entity.js';
 import { JwtTokenService } from '../../../auth/infrastructure/token/jwt-token.service.js';
 import { IRoomRepository } from '../../domain/repositories/room.repository.js';
+import { LobbyGateway } from '../../../lobby/presentation/websocket/lobby.gateway.js';
 
 @WebSocketGateway({
   cors: {
@@ -41,6 +42,8 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly toggleReadyUseCase: ToggleReadyUseCase,
     private readonly startGameUseCase: StartGameUseCase,
     private readonly roomRepository: IRoomRepository,
+    @Inject(forwardRef(() => LobbyGateway))
+    private readonly lobbyGateway?: LobbyGateway,
     private readonly jwtTokenService?: JwtTokenService, // Optional to avoid breaking unit tests
   ) {}
 
@@ -129,6 +132,9 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     const userId = client.user.sub;
     try {
+      const room = await this.roomRepository.findById(data.roomId);
+      const ruleset = room?.ruleset;
+
       const result = await this.leaveRoomUseCase.execute({
         userId,
         roomId: data.roomId,
@@ -136,15 +142,20 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       await client.leave(data.roomId);
       if (!result.closed) {
-        const room = await this.roomRepository.findById(data.roomId);
-        if (room) {
-          this.broadcastRoomUpdate(data.roomId, room);
+        const updatedRoom = await this.roomRepository.findById(data.roomId);
+        if (updatedRoom) {
+          this.broadcastRoomUpdate(data.roomId, updatedRoom);
         }
       } else {
         // Room was deleted because it is empty
         this.server
           .to(data.roomId)
           .emit('room:deleted', { roomId: data.roomId });
+        if (ruleset && this.lobbyGateway) {
+          this.lobbyGateway.broadcastRooms(ruleset).catch((err) => {
+            this.logger.error(`Failed to broadcast rooms on delete: ${err.message}`);
+          });
+        }
       }
     } catch (err) {
       const msg = this.getErrorMessage(err);
@@ -189,6 +200,11 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
 
       this.server.to(data.roomId).emit('room:started', this.formatRoom(room));
+      if (this.lobbyGateway) {
+        this.lobbyGateway.broadcastRooms(room.ruleset).catch((err) => {
+          this.logger.error(`Failed to broadcast rooms on start: ${err.message}`);
+        });
+      }
     } catch (err) {
       const msg = this.getErrorMessage(err);
       this.logger.error(`Room start failed: ${msg}`);
@@ -237,6 +253,11 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   private broadcastRoomUpdate(roomId: string, room: Room) {
     this.server.to(roomId).emit('room:updated', this.formatRoom(room));
+    if (this.lobbyGateway) {
+      this.lobbyGateway.broadcastRooms(room.ruleset).catch((err) => {
+        this.logger.error(`Failed to broadcast rooms update: ${err.message}`);
+      });
+    }
   }
 
   private formatRoom(room: Room) {

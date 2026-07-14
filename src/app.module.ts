@@ -8,6 +8,7 @@ import { UsersModule } from './modules/users/users.module.js';
 import { RoomModule } from './modules/room/room.module.js';
 import { LeaderboardModule } from './modules/leaderboard/leaderboard.module.js';
 import { MatchmakingModule } from './modules/matchmaking/matchmaking.module.js';
+import { LobbyModule } from './modules/lobby/lobby.module.js';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MatchmakingModule } from './modules/matchmaking/matchmaking.module.js';
     RoomModule,
     LeaderboardModule,
     MatchmakingModule,
+    LobbyModule,
   ],
 })
 export class AppModule {}
