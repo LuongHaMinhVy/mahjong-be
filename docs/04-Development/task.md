@@ -85,12 +85,11 @@
 | 82  | Brainstorming - Present design                                         | completed |
 | 83  | Brainstorming - Write design doc                                       | completed |
 | 84  | Brainstorming - Transition to implementation                           | completed |
-| 85  | Replay - Database Schema Update                                        | pending   |
-| 86  | Replay - Domain Layer - GameState Update                               | pending   |
-| 87  | Replay - Infrastructure Layer - Redis Repository Update                | pending   |
+| 85  | Replay - Database Schema Update                                        | completed |
+| 86  | Replay - Domain Layer - GameState Update                               | completed |
+| 87  | Replay - Infrastructure Layer - Redis Repository Update                | completed |
 | 88  | Replay - Domain & Infrastructure Layer - GameReplay Repository         | pending   |
 | 89  | Replay - Application Layer - Update Game Use Cases to Record Actions    | pending   |
 | 90  | Replay - Application & Presentation Layer - GetGameReplay              | pending   |
 | 91  | Replay - Module Registration                                           | pending   |
 | 92  | Replay - Final Verification & Test Cleanup                             | pending   |
-
