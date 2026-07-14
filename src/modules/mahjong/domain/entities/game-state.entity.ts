@@ -1,5 +1,9 @@
 import { type Tile } from '../value-objects/tile.vo.js';
 import { type Meld } from '../value-objects/meld.vo.js';
+import {
+  type GameAction,
+  type GameActionType,
+} from '../value-objects/game-action.vo.js';
 
 export interface PlayerState {
   userId: string;
@@ -11,6 +15,8 @@ export interface PlayerState {
 }
 
 export class GameState {
+  public actions: GameAction[] = [];
+
   constructor(
     readonly id: string,
     readonly roomId: string,
@@ -31,5 +37,23 @@ export class GameState {
 
   nextTurn(): void {
     this.currentTurn = (this.currentTurn + 1) % 4;
+  }
+
+  addAction(
+    playerId: string,
+    type: GameActionType,
+    tile?: Tile,
+    extra?: any,
+  ): void {
+    this.actions.push({
+      sequence: this.actions.length,
+      playerId,
+      type,
+      tile: tile
+        ? { suit: tile.suit, value: tile.value, type: tile.type, id: tile.id }
+        : undefined,
+      extra,
+      timestamp: Date.now(),
+    });
   }
 }
