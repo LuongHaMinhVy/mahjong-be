@@ -80,8 +80,17 @@
 | 77  | i18n - Standardise Validation Errors in ValidationPipe                | completed |
 | 78  | i18n - Update GlobalExceptionFilter to Translate Messages              | completed |
 | 79  | Brainstorming - Explore project context                                | completed |
-| 80  | Brainstorming - Ask clarifying questions                               | in-progress |
-| 81  | Brainstorming - Propose 2-3 approaches                                 | pending   |
-| 82  | Brainstorming - Present design                                         | pending   |
-| 83  | Brainstorming - Write design doc                                       | pending   |
-| 84  | Brainstorming - Transition to implementation                           | pending   |
+| 80  | Brainstorming - Ask clarifying questions                               | completed |
+| 81  | Brainstorming - Propose 2-3 approaches                                 | completed |
+| 82  | Brainstorming - Present design                                         | completed |
+| 83  | Brainstorming - Write design doc                                       | completed |
+| 84  | Brainstorming - Transition to implementation                           | completed |
+| 85  | Replay - Database Schema Update                                        | pending   |
+| 86  | Replay - Domain Layer - GameState Update                               | pending   |
+| 87  | Replay - Infrastructure Layer - Redis Repository Update                | pending   |
+| 88  | Replay - Domain & Infrastructure Layer - GameReplay Repository         | pending   |
+| 89  | Replay - Application Layer - Update Game Use Cases to Record Actions    | pending   |
+| 90  | Replay - Application & Presentation Layer - GetGameReplay              | pending   |
+| 91  | Replay - Module Registration                                           | pending   |
+| 92  | Replay - Final Verification & Test Cleanup                             | pending   |
+
