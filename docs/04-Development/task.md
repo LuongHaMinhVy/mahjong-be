@@ -79,3 +79,9 @@
 | 76  | i18n - Implement I18nMiddleware & Register Globally                   | completed |
 | 77  | i18n - Standardise Validation Errors in ValidationPipe                | completed |
 | 78  | i18n - Update GlobalExceptionFilter to Translate Messages              | completed |
+| 79  | Brainstorming - Explore project context                                | completed |
+| 80  | Brainstorming - Ask clarifying questions                               | in-progress |
+| 81  | Brainstorming - Propose 2-3 approaches                                 | pending   |
+| 82  | Brainstorming - Present design                                         | pending   |
+| 83  | Brainstorming - Write design doc                                       | pending   |
+| 84  | Brainstorming - Transition to implementation                           | pending   |
