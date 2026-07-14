@@ -59,7 +59,8 @@ export class AdminController {
   async banUser(@Param('id') userId: string, @Body() body: BanUserDto) {
     await this.banUserUseCase.execute({
       userId,
-      durationMinutes: body.durationMinutes !== undefined ? body.durationMinutes : null,
+      durationMinutes:
+        body.durationMinutes !== undefined ? body.durationMinutes : null,
     });
     return {
       message:

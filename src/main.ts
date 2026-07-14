@@ -7,7 +7,10 @@ import { GlobalExceptionFilter } from './shared/exceptions/index.js';
 import { ResponseInterceptor } from './shared/interceptors/response.interceptor.js';
 import { I18nService } from './shared/i18n/i18n.service.js';
 
-function getValidationArgs(constraint: string, defaultMessage: string): Record<string, any> | undefined {
+function getValidationArgs(
+  constraint: string,
+  defaultMessage: string,
+): Record<string, any> | undefined {
   if (constraint === 'minLength' || constraint === 'maxLength') {
     const match = defaultMessage.match(/\d+/);
     if (match) {
@@ -17,16 +20,21 @@ function getValidationArgs(constraint: string, defaultMessage: string): Record<s
   return undefined;
 }
 
-function formatErrors(errors: ValidationError[], i18nService: I18nService): string[] {
+function formatErrors(
+  errors: ValidationError[],
+  i18nService: I18nService,
+): string[] {
   const messages: string[] = [];
 
   const flatten = (errs: ValidationError[]) => {
     for (const error of errs) {
       if (error.constraints) {
-        for (const [constraintKey, defaultMessage] of Object.entries(error.constraints)) {
+        for (const [constraintKey, defaultMessage] of Object.entries(
+          error.constraints,
+        )) {
           const translationKey = `validation.${constraintKey}`;
           const args = getValidationArgs(constraintKey, defaultMessage);
-          
+
           let translated = i18nService.translate(translationKey, args);
           if (translated === translationKey) {
             translated = defaultMessage;

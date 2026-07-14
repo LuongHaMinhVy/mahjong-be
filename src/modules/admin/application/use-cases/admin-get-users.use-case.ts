@@ -10,7 +10,9 @@ export interface AdminGetUsersInput {
 export class AdminGetUsersUseCase {
   constructor(private readonly userRepository: IUserRepository) {}
 
-  async execute(input: AdminGetUsersInput): Promise<{ users: User[]; total: number }> {
+  async execute(
+    input: AdminGetUsersInput,
+  ): Promise<{ users: User[]; total: number }> {
     return this.userRepository.findMany(input);
   }
 }

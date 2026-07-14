@@ -42,7 +42,9 @@ export class User {
     this._elo = props.elo ?? 1000;
     this._isEmailVerified = props.isEmailVerified ?? false;
     this._role = props.role || 'USER';
-    this._settings = new UserSettings(props.settings || { locale: 'vi', soundEnabled: true });
+    this._settings = new UserSettings(
+      props.settings || { locale: 'vi', soundEnabled: true },
+    );
     this._bannedUntil = props.bannedUntil || null;
     this._createdAt = props.createdAt || new Date();
     this._updatedAt = props.updatedAt || new Date();

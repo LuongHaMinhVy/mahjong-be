@@ -29,7 +29,7 @@ export class I18nMiddleware implements NestMiddleware {
           .map((lang) => {
             const [code, q] = lang.trim().split(';q=');
             return {
-              code: code!.trim().split('-')[0]!.toLowerCase(),
+              code: code.trim().split('-')[0].toLowerCase(),
               q: q ? parseFloat(q) : 1.0,
             };
           })
@@ -52,7 +52,10 @@ export class I18nMiddleware implements NestMiddleware {
         if (authHeader && authHeader.startsWith('Bearer ')) {
           const token = authHeader.split(' ')[1];
           try {
-            const payload = await this.jwtService.verifyAsync<{ sub: string; email: string }>(token!);
+            const payload = await this.jwtService.verifyAsync<{
+              sub: string;
+              email: string;
+            }>(token);
             if (payload && payload.sub) {
               const userSetting = await this.prisma.userSetting.findUnique({
                 where: { userId: payload.sub },

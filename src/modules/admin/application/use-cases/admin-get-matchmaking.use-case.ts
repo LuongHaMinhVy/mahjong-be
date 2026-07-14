@@ -4,7 +4,10 @@ import { type MatchmakingQueueEntry } from '../../../matchmaking/domain/value-ob
 export class AdminGetMatchmakingUseCase {
   constructor(private readonly matchmakingRepository: IMatchmakingRepository) {}
 
-  async execute(): Promise<{ riichi: MatchmakingQueueEntry[]; chinese: MatchmakingQueueEntry[] }> {
+  async execute(): Promise<{
+    riichi: MatchmakingQueueEntry[];
+    chinese: MatchmakingQueueEntry[];
+  }> {
     const [riichi, chinese] = await Promise.all([
       this.matchmakingRepository.getQueue('riichi'),
       this.matchmakingRepository.getQueue('chinese'),

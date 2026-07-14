@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator.js';
 import { IUserRepository } from '../../modules/auth/domain/user.repository.js';
@@ -12,10 +17,10 @@ export class RolesGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const requiredRoles = this.reflector.getAllAndOverride<string[]>(
+      ROLES_KEY,
+      [context.getHandler(), context.getClass()],
+    );
 
     const request = context.switchToHttp().getRequest<{ user?: JwtPayload }>();
     const userPayload = request.user;
@@ -30,7 +35,9 @@ export class RolesGuard implements CanActivate {
     }
 
     if (user.isBanned()) {
-      throw new ForbiddenException(`Tài khoản đã bị khóa đến ngày: ${user.bannedUntil?.toLocaleString()}`);
+      throw new ForbiddenException(
+        `Tài khoản đã bị khóa đến ngày: ${user.bannedUntil?.toLocaleString()}`,
+      );
     }
 
     if (!requiredRoles) {

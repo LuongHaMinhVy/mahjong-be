@@ -1,9 +1,9 @@
 import { jest } from '@jest/globals';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { GlobalExceptionFilter } from './http-exception.filter.js';
 import { I18nService } from '../i18n/i18n.service.js';
 import { DomainException } from './domain.exception.js';
-import { HttpException, HttpStatus, ArgumentsHost } from '@nestjs/common';
+import { HttpException, HttpStatus, type ArgumentsHost } from '@nestjs/common';
 
 describe('GlobalExceptionFilter', () => {
   let filter: GlobalExceptionFilter;
@@ -35,7 +35,10 @@ describe('GlobalExceptionFilter', () => {
     filter = module.get<GlobalExceptionFilter>(GlobalExceptionFilter);
   });
 
-  const createMockArgumentsHost = (): { host: ArgumentsHost; responseMock: any } => {
+  const createMockArgumentsHost = (): {
+    host: ArgumentsHost;
+    responseMock: any;
+  } => {
     const responseMock = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn().mockReturnThis(),
@@ -50,11 +53,15 @@ describe('GlobalExceptionFilter', () => {
 
   it('should translate and format DomainException', () => {
     const { host, responseMock } = createMockArgumentsHost();
-    const exception = new DomainException('NOT_FOUND', 'User not found', 404, { resource: 'User' });
+    const exception = new DomainException('NOT_FOUND', 'User not found', 404, {
+      resource: 'User',
+    });
 
     filter.catch(exception, host);
 
-    expect(i18nService.translate).toHaveBeenCalledWith('errors.NOT_FOUND', { resource: 'User' });
+    expect(i18nService.translate).toHaveBeenCalledWith('errors.NOT_FOUND', {
+      resource: 'User',
+    });
     expect(responseMock.status).toHaveBeenCalledWith(404);
     expect(responseMock.json).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -67,7 +74,10 @@ describe('GlobalExceptionFilter', () => {
 
   it('should translate and format HttpException with a string message', () => {
     const { host, responseMock } = createMockArgumentsHost();
-    const exception = new HttpException('UNAUTHORIZED', HttpStatus.UNAUTHORIZED);
+    const exception = new HttpException(
+      'UNAUTHORIZED',
+      HttpStatus.UNAUTHORIZED,
+    );
 
     filter.catch(exception, host);
 

@@ -1,4 +1,8 @@
-import { Module, type NestModule, type MiddlewareConsumer } from '@nestjs/common';
+import {
+  Module,
+  type NestModule,
+  type MiddlewareConsumer,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './shared/database/prisma.module.js';
 import { RedisModule } from './shared/redis/redis.module.js';
