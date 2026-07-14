@@ -1,5 +1,4 @@
 // eslint.config.mjs
-
 // @ts-check
 
 import eslint from '@eslint/js';
@@ -39,6 +38,7 @@ export default defineConfig(
       },
     },
   },
+  
 
   {
     rules: {
@@ -93,6 +93,18 @@ export default defineConfig(
           endOfLine: 'auto',
         },
       ],
+    },
+  },
+
+  {
+    files: ['**/*.spec.ts', '**/*.test.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 );

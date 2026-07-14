@@ -20,7 +20,9 @@ export class MatchmakingProcessor {
   start() {
     this.intervalId = setInterval(() => {
       this.processMatchmaking().catch((err) =>
-        this.logger.error(`Error in matchmaking loop: ${(err as Error).message}`),
+        this.logger.error(
+          `Error in matchmaking loop: ${(err as Error).message}`,
+        ),
       );
     }, 2000);
   }
@@ -38,7 +40,9 @@ export class MatchmakingProcessor {
     if (queue.length < 4) return;
 
     // Prioritize players waiting the longest
-    const sorted = [...queue].sort((a, b) => a.joinedAt.getTime() - b.joinedAt.getTime());
+    const sorted = [...queue].sort(
+      (a, b) => a.joinedAt.getTime() - b.joinedAt.getTime(),
+    );
     const matchedGroup: string[] = [];
 
     const now = new Date();
@@ -73,17 +77,29 @@ export class MatchmakingProcessor {
 
     if (matchedGroup.length === 4) {
       const ticketId = randomUUID();
-      const ticket = new MatchTicket(ticketId, ruleset, matchedGroup, [], new Date());
+      const ticket = new MatchTicket(
+        ticketId,
+        ruleset,
+        matchedGroup,
+        [],
+        new Date(),
+      );
 
       // Remove from queue
-      await Promise.all(matchedGroup.map((userId) => this.matchmakingRepository.removeFromQueue(ruleset, userId)));
+      await Promise.all(
+        matchedGroup.map((userId) =>
+          this.matchmakingRepository.removeFromQueue(ruleset, userId),
+        ),
+      );
 
       // Create ticket
       await this.matchmakingRepository.createTicket(ticket);
 
       // Broadcast event
       this.lobbyGateway.broadcastMatchFound(ticketId, matchedGroup);
-      this.logger.log(`Match ticket created: ${ticketId} for players ${matchedGroup.join(', ')}`);
+      this.logger.log(
+        `Match ticket created: ${ticketId} for players ${matchedGroup.join(', ')}`,
+      );
     }
   }
 }

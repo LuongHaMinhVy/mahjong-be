@@ -8,38 +8,70 @@ import { MatchTicket } from '../../domain/entities/match-ticket.entity.js';
 export class RedisMatchmakingRepository implements IMatchmakingRepository {
   constructor(@Inject('REDIS') private readonly redis: Redis) {}
 
-  async addToQueue(ruleset: 'riichi' | 'chinese', userId: string, elo: number, joinedAt: Date): Promise<void> {
+  async addToQueue(
+    ruleset: 'riichi' | 'chinese',
+    userId: string,
+    elo: number,
+    joinedAt: Date,
+  ): Promise<void> {
     await Promise.all([
       this.redis.zadd(`matchmaking:queue:${ruleset}`, elo, userId),
-      this.redis.hset(`matchmaking:joined-at:${ruleset}`, userId, joinedAt.getTime().toString()),
+      this.redis.hset(
+        `matchmaking:joined-at:${ruleset}`,
+        userId,
+        joinedAt.getTime().toString(),
+      ),
     ]);
   }
 
-  async removeFromQueue(ruleset: 'riichi' | 'chinese', userId: string): Promise<void> {
+  async removeFromQueue(
+    ruleset: 'riichi' | 'chinese',
+    userId: string,
+  ): Promise<void> {
     await Promise.all([
       this.redis.zrem(`matchmaking:queue:${ruleset}`, userId),
       this.redis.hdel(`matchmaking:joined-at:${ruleset}`, userId),
     ]);
   }
 
-  async getQueue(ruleset: 'riichi' | 'chinese'): Promise<MatchmakingQueueEntry[]> {
-    const userIds = await this.redis.zrange(`matchmaking:queue:${ruleset}`, 0, -1);
+  async getQueue(
+    ruleset: 'riichi' | 'chinese',
+  ): Promise<MatchmakingQueueEntry[]> {
+    const userIds = await this.redis.zrange(
+      `matchmaking:queue:${ruleset}`,
+      0,
+      -1,
+    );
     if (userIds.length === 0) return [];
 
     const entries = await Promise.all(
       userIds.map(async (userId) => {
-        const eloStr = await this.redis.zscore(`matchmaking:queue:${ruleset}`, userId);
-        const joinedAtStr = await this.redis.hget(`matchmaking:joined-at:${ruleset}`, userId);
+        const eloStr = await this.redis.zscore(
+          `matchmaking:queue:${ruleset}`,
+          userId,
+        );
+        const joinedAtStr = await this.redis.hget(
+          `matchmaking:joined-at:${ruleset}`,
+          userId,
+        );
         const elo = eloStr ? parseInt(eloStr, 10) : 1000;
-        const joinedAt = joinedAtStr ? new Date(parseInt(joinedAtStr, 10)) : new Date();
+        const joinedAt = joinedAtStr
+          ? new Date(parseInt(joinedAtStr, 10))
+          : new Date();
         return new MatchmakingQueueEntry(userId, elo, joinedAt);
-      })
+      }),
     );
     return entries;
   }
 
-  async getJoinedAt(ruleset: 'riichi' | 'chinese', userId: string): Promise<Date | null> {
-    const joinedAtStr = await this.redis.hget(`matchmaking:joined-at:${ruleset}`, userId);
+  async getJoinedAt(
+    ruleset: 'riichi' | 'chinese',
+    userId: string,
+  ): Promise<Date | null> {
+    const joinedAtStr = await this.redis.hget(
+      `matchmaking:joined-at:${ruleset}`,
+      userId,
+    );
     return joinedAtStr ? new Date(parseInt(joinedAtStr, 10)) : null;
   }
 
@@ -64,8 +96,10 @@ export class RedisMatchmakingRepository implements IMatchmakingRepository {
       data.id,
       data.ruleset as 'riichi' | 'chinese',
       data.players ? data.players.split(',') : [],
-      data.acceptedPlayers ? data.acceptedPlayers.split(',').filter(Boolean) : [],
-      new Date(parseInt(data.createdAt, 10))
+      data.acceptedPlayers
+        ? data.acceptedPlayers.split(',').filter(Boolean)
+        : [],
+      new Date(parseInt(data.createdAt, 10)),
     );
   }
 

@@ -13,14 +13,13 @@ export class RedisRoomRepository implements IRoomRepository {
 
   async save(room: Room): Promise<void> {
     const key = `${this.prefix}${room.id}`;
-    // Serialization
     const data = JSON.stringify({
       id: room.id,
       name: room.name,
       hostId: room.hostId,
       ruleset: room.ruleset,
       status: room.status,
-      players: room.players.map((p) => ({
+      players: room.players.map((p: RoomPlayer) => ({
         userId: p.userId,
         displayName: p.displayName,
         avatar: p.avatar,
@@ -39,7 +38,7 @@ export class RedisRoomRepository implements IRoomRepository {
     if (!data) return null;
 
     try {
-      const raw = JSON.parse(data);
+      const raw = JSON.parse(data) as Room;
       return this.reconstructRoom(raw);
     } catch {
       return null;
@@ -66,9 +65,9 @@ export class RedisRoomRepository implements IRoomRepository {
     return rooms;
   }
 
-  private reconstructRoom(raw: any): Room {
+  private reconstructRoom(raw: Room): Room {
     const players = (raw.players || []).map(
-      (p: any) =>
+      (p: RoomPlayer) =>
         new RoomPlayer(p.userId, p.displayName, p.avatar, p.elo, p.isReady),
     );
 

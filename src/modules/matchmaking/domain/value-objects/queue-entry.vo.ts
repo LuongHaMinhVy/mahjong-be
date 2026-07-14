@@ -6,7 +6,10 @@ export class MatchmakingQueueEntry {
   ) {}
 
   getAllowedEloGap(currentTime: Date): number {
-    const elapsedSeconds = Math.max(0, Math.floor((currentTime.getTime() - this.joinedAt.getTime()) / 1000));
+    const elapsedSeconds = Math.max(
+      0,
+      Math.floor((currentTime.getTime() - this.joinedAt.getTime()) / 1000),
+    );
     return 100 + elapsedSeconds * 5;
   }
 }

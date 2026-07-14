@@ -23,7 +23,8 @@ import { IUserRepository } from '../auth/domain/user.repository.js';
     },
     {
       provide: JoinQueueUseCase,
-      useFactory: (repo: IMatchmakingRepository, userRepo: IUserRepository) => new JoinQueueUseCase(repo, userRepo),
+      useFactory: (repo: IMatchmakingRepository, userRepo: IUserRepository) =>
+        new JoinQueueUseCase(repo, userRepo),
       inject: [IMatchmakingRepository, IUserRepository],
     },
     {
@@ -38,8 +39,15 @@ import { IUserRepository } from '../auth/domain/user.repository.js';
         createRoom: CreateRoomUseCase,
         joinRoom: JoinRoomUseCase,
         toggleReady: ToggleReadyUseCase,
-        startGame: StartGameUseCase
-      ) => new RespondToMatchUseCase(repo, createRoom, joinRoom, toggleReady, startGame),
+        startGame: StartGameUseCase,
+      ) =>
+        new RespondToMatchUseCase(
+          repo,
+          createRoom,
+          joinRoom,
+          toggleReady,
+          startGame,
+        ),
       inject: [
         IMatchmakingRepository,
         CreateRoomUseCase,

@@ -18,6 +18,11 @@ export class JoinQueueUseCase {
     if (!user) {
       throw new NotFoundException('User', input.userId);
     }
-    await this.matchmakingRepository.addToQueue(input.ruleset, user.id, user.elo, new Date());
+    await this.matchmakingRepository.addToQueue(
+      input.ruleset,
+      user.id,
+      user.elo,
+      new Date(),
+    );
   }
 }

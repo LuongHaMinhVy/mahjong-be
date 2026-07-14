@@ -28,11 +28,17 @@ export class RespondToMatchUseCase {
   async execute(input: RespondToMatchInput): Promise<RespondToMatchResult> {
     const ticket = await this.matchmakingRepository.getTicket(input.ticketId);
     if (!ticket) {
-      throw new DomainException('MATCH_NOT_FOUND', 'Match ticket expired or not found');
+      throw new DomainException(
+        'MATCH_NOT_FOUND',
+        'Match ticket expired or not found',
+      );
     }
 
     if (!ticket.players.includes(input.userId)) {
-      throw new DomainException('NOT_IN_MATCH', 'Player is not in this match ticket');
+      throw new DomainException(
+        'NOT_IN_MATCH',
+        'Player is not in this match ticket',
+      );
     }
 
     if (!input.accept) {
@@ -42,8 +48,16 @@ export class RespondToMatchUseCase {
       const requeued: string[] = [];
       for (const p of ticket.players) {
         if (p !== input.userId) {
-          const originalJoinedAt = await this.matchmakingRepository.getJoinedAt(ticket.ruleset, p);
-          await this.matchmakingRepository.addToQueue(ticket.ruleset, p, 1000, originalJoinedAt || new Date());
+          const originalJoinedAt = await this.matchmakingRepository.getJoinedAt(
+            ticket.ruleset,
+            p,
+          );
+          await this.matchmakingRepository.addToQueue(
+            ticket.ruleset,
+            p,
+            1000,
+            originalJoinedAt || new Date(),
+          );
           requeued.push(p);
         }
       }
@@ -66,7 +80,7 @@ export class RespondToMatchUseCase {
       ticket.ruleset,
       ticket.players,
       updatedAccepted,
-      ticket.createdAt
+      ticket.createdAt,
     );
 
     if (updatedTicket.isFullyAccepted()) {
@@ -106,6 +120,7 @@ export class RespondToMatchUseCase {
       return {
         status: 'completed',
         roomId: room.id,
+        ticket: updatedTicket,
       };
     }
 

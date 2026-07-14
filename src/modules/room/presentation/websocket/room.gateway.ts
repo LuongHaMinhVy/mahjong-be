@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument */
 import {
   WebSocketGateway,
   WebSocketServer,
@@ -45,6 +44,10 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly jwtTokenService?: JwtTokenService, // Optional to avoid breaking unit tests
   ) {}
 
+  private getErrorMessage(err: unknown): string {
+    return err instanceof Error ? err.message : String(err);
+  }
+
   async handleConnection(client: Socket) {
     this.logger.log(`Client connected to /room: ${client.id}`);
     if (this.jwtTokenService) {
@@ -52,7 +55,8 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (token) {
         try {
           const payload = await this.jwtTokenService.verifyAccessToken(token);
-          (client as any).user = payload;
+          const clientWithUser = client as Socket & { user?: JwtPayload };
+          clientWithUser.user = payload;
           await this.lobbyService.setUserOnline(payload.sub);
           this.logger.log(`User ${payload.sub} marked online via connection`);
         } catch {
@@ -64,7 +68,8 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected from /room: ${client.id}`);
-    const userId = (client as any).user?.sub;
+    const clientWithUser = client as Socket & { user?: JwtPayload };
+    const userId = clientWithUser.user?.sub;
     if (userId) {
       await this.lobbyService.setUserOffline(userId);
       this.logger.log(`User ${userId} marked offline via disconnect`);
@@ -87,9 +92,10 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       await client.join(room.id);
       this.broadcastRoomUpdate(room.id, room);
-    } catch (err: any) {
-      this.logger.error(`Room creation failed: ${err.message}`);
-      client.emit('error', err.message);
+    } catch (err) {
+      const msg = this.getErrorMessage(err);
+      this.logger.error(`Room creation failed: ${msg}`);
+      client.emit('error', msg);
     }
   }
 
@@ -108,9 +114,10 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       await client.join(room.id);
       this.broadcastRoomUpdate(room.id, room);
-    } catch (err: any) {
-      this.logger.error(`Room join failed: ${err.message}`);
-      client.emit('error', err.message);
+    } catch (err) {
+      const msg = this.getErrorMessage(err);
+      this.logger.error(`Room join failed: ${msg}`);
+      client.emit('error', msg);
     }
   }
 
@@ -139,9 +146,10 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
           .to(data.roomId)
           .emit('room:deleted', { roomId: data.roomId });
       }
-    } catch (err: any) {
-      this.logger.error(`Room leave failed: ${err.message}`);
-      client.emit('error', err.message);
+    } catch (err) {
+      const msg = this.getErrorMessage(err);
+      this.logger.error(`Room leave failed: ${msg}`);
+      client.emit('error', msg);
     }
   }
 
@@ -160,9 +168,10 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
 
       this.broadcastRoomUpdate(data.roomId, room);
-    } catch (err: any) {
-      this.logger.error(`Room ready toggle failed: ${err.message}`);
-      client.emit('error', err.message);
+    } catch (err) {
+      const msg = this.getErrorMessage(err);
+      this.logger.error(`Room ready toggle failed: ${msg}`);
+      client.emit('error', msg);
     }
   }
 
@@ -180,9 +189,10 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
 
       this.server.to(data.roomId).emit('room:started', this.formatRoom(room));
-    } catch (err: any) {
-      this.logger.error(`Room start failed: ${err.message}`);
-      client.emit('error', err.message);
+    } catch (err) {
+      const msg = this.getErrorMessage(err);
+      this.logger.error(`Room start failed: ${msg}`);
+      client.emit('error', msg);
     }
   }
 
@@ -202,9 +212,10 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
       } else {
         client.emit('lobby:queue_joined');
       }
-    } catch (err: any) {
-      this.logger.error(`Lobby join queue failed: ${err.message}`);
-      client.emit('error', err.message);
+    } catch (err) {
+      const msg = this.getErrorMessage(err);
+      this.logger.error(`Lobby join queue failed: ${msg}`);
+      client.emit('error', msg);
     }
   }
 
@@ -217,9 +228,10 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     try {
       await this.lobbyService.leaveQueue(userId);
       client.emit('lobby:queue_left');
-    } catch (err: any) {
-      this.logger.error(`Lobby leave queue failed: ${err.message}`);
-      client.emit('error', err.message);
+    } catch (err) {
+      const msg = this.getErrorMessage(err);
+      this.logger.error(`Lobby leave queue failed: ${msg}`);
+      client.emit('error', msg);
     }
   }
 

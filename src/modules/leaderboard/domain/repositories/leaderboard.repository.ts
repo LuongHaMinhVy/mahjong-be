@@ -6,7 +6,12 @@ export interface LeaderboardPage {
 }
 
 export abstract class ILeaderboardRepository {
-  abstract getGlobalRankings(limit: number, offset: number): Promise<LeaderboardPage>;
+  abstract getGlobalRankings(
+    limit: number,
+    offset: number,
+  ): Promise<LeaderboardPage>;
   abstract getUserRank(userId: string): Promise<number>;
-  abstract getUserStats(userId: string): Promise<{ totalGames: number; wins: number }>;
+  abstract getUserStats(
+    userId: string,
+  ): Promise<{ totalGames: number; wins: number }>;
 }

@@ -8,6 +8,15 @@ import {
 } from '../../../mahjong/domain/entities/game-result.entity.js';
 import { DomainException } from '../../../../shared/exceptions/domain.exception.js';
 
+interface RawGameResult {
+  id: string;
+  roomId: string;
+  rulesetName: string;
+  winnerId: string | null;
+  playersJson: unknown;
+  createdAt: Date;
+}
+
 @Injectable()
 export class PrismaUserStatsRepository implements IUserStatsRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -21,13 +30,15 @@ export class PrismaUserStatsRepository implements IUserStatsRepository {
       throw new DomainException('NOT_FOUND', 'User not found');
     }
 
-    // Get all game results where the playersJson array contains the player's userId
     const results = await this.prisma.gameResult.findMany({
       where: {
         playersJson: {
           path: [],
           array_contains: [{ userId }],
         },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
 
@@ -62,10 +73,12 @@ export class PrismaUserStatsRepository implements IUserStatsRepository {
       skip: offset,
     });
 
-    return rawResults.map((r) => this.mapToDomain(r));
+    return (rawResults as unknown as RawGameResult[]).map((r) =>
+      this.mapToDomain(r),
+    );
   }
 
-  private mapToDomain(raw: any): GameResult {
+  private mapToDomain(raw: RawGameResult): GameResult {
     const players = raw.playersJson as GameResultPlayer[];
     return new GameResult(
       raw.id,

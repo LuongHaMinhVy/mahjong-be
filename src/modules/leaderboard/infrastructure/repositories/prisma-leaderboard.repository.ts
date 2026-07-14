@@ -1,13 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../shared/database/prisma.service.js';
-import { type ILeaderboardRepository, type LeaderboardPage } from '../../domain/repositories/leaderboard.repository.js';
+import {
+  type ILeaderboardRepository,
+  type LeaderboardPage,
+} from '../../domain/repositories/leaderboard.repository.js';
 import { LeaderboardEntry } from '../../domain/value-objects/leaderboard-entry.vo.js';
 
 @Injectable()
 export class PrismaLeaderboardRepository implements ILeaderboardRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getGlobalRankings(limit: number, offset: number): Promise<LeaderboardPage> {
+  async getGlobalRankings(
+    limit: number,
+    offset: number,
+  ): Promise<LeaderboardPage> {
     const [users, total] = await Promise.all([
       this.prisma.user.findMany({
         orderBy: { elo: 'desc' },
@@ -20,8 +26,15 @@ export class PrismaLeaderboardRepository implements ILeaderboardRepository {
     const entries = await Promise.all(
       users.map(async (u) => {
         const stats = await this.getUserStats(u.id);
-        return new LeaderboardEntry(u.id, u.displayName, u.avatar, u.elo, stats.totalGames, stats.wins);
-      })
+        return new LeaderboardEntry(
+          u.id,
+          u.displayName,
+          u.avatar,
+          u.elo,
+          stats.totalGames,
+          stats.wins,
+        );
+      }),
     );
 
     return { entries, total };
@@ -39,7 +52,9 @@ export class PrismaLeaderboardRepository implements ILeaderboardRepository {
     return count + 1;
   }
 
-  async getUserStats(userId: string): Promise<{ totalGames: number; wins: number }> {
+  async getUserStats(
+    userId: string,
+  ): Promise<{ totalGames: number; wins: number }> {
     const results = await this.prisma.gameResult.findMany({
       where: {
         playersJson: {

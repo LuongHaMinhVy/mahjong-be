@@ -49,8 +49,12 @@ export class MatchmakingGateway
     if (user) {
       this.clientSockets.delete(user.sub);
       this.logger.log(`User ${user.sub} disconnected from matchmaking`);
-      this.leaveQueueUseCase.execute({ userId: user.sub, ruleset: 'riichi' }).catch(() => {});
-      this.leaveQueueUseCase.execute({ userId: user.sub, ruleset: 'chinese' }).catch(() => {});
+      this.leaveQueueUseCase
+        .execute({ userId: user.sub, ruleset: 'riichi' })
+        .catch(() => {});
+      this.leaveQueueUseCase
+        .execute({ userId: user.sub, ruleset: 'chinese' })
+        .catch(() => {});
     }
   }
 
@@ -98,10 +102,16 @@ export class MatchmakingGateway
         accept: data.accept,
       });
 
-      if (result.status === 'cancelled' && result.requeuedPlayers && result.cancelledPlayer) {
+      if (
+        result.status === 'cancelled' &&
+        result.requeuedPlayers &&
+        result.cancelledPlayer
+      ) {
         const declinedSocketId = this.clientSockets.get(result.cancelledPlayer);
         if (declinedSocketId) {
-          this.server.to(declinedSocketId).emit('matchmaking:cancelled', { reason: 'declined' });
+          this.server
+            .to(declinedSocketId)
+            .emit('matchmaking:cancelled', { reason: 'declined' });
         }
 
         for (const p of result.requeuedPlayers) {
@@ -115,7 +125,9 @@ export class MatchmakingGateway
         for (const p of players) {
           const sid = this.clientSockets.get(p);
           if (sid) {
-            this.server.to(sid).emit('matchmaking:success', { roomId: result.roomId });
+            this.server
+              .to(sid)
+              .emit('matchmaking:success', { roomId: result.roomId });
           }
         }
       } else if (result.status === 'accepted' && result.ticket) {
@@ -139,7 +151,9 @@ export class MatchmakingGateway
     for (const p of playerIds) {
       const sid = this.clientSockets.get(p);
       if (sid) {
-        this.server.to(sid).emit('matchmaking:found', { ticketId, timeout: 10 });
+        this.server
+          .to(sid)
+          .emit('matchmaking:found', { ticketId, timeout: 10 });
       }
     }
   }

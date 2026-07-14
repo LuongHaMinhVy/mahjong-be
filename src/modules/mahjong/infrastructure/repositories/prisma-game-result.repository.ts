@@ -6,6 +6,15 @@ import {
 } from '../../domain/entities/game-result.entity.js';
 import { IGameResultRepository } from '../../domain/repositories/game-result.repository.js';
 
+interface RawGameResult {
+  id: string;
+  roomId: string;
+  rulesetName: string;
+  winnerId: string | null;
+  playersJson: unknown;
+  createdAt: Date;
+}
+
 @Injectable()
 export class PrismaGameResultRepository implements IGameResultRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -33,10 +42,6 @@ export class PrismaGameResultRepository implements IGameResultRepository {
   }
 
   async findByPlayerId(playerId: string): Promise<GameResult[]> {
-    // Find all game results where the playersJson array contains the player's userId
-    // In PostgreSQL with Prisma, we can search within JSONB using path operations
-    // or we can fetch and filter, or use Prisma's json filters:
-    // path: 'playersJson', array_contains: [{ userId: playerId }]
     const results = await this.prisma.gameResult.findMany({
       where: {
         playersJson: {
@@ -49,10 +54,10 @@ export class PrismaGameResultRepository implements IGameResultRepository {
       },
     });
 
-    return results.map((r) => this.mapToDomain(r));
+    return results.map((r) => this.mapToDomain(r as RawGameResult));
   }
 
-  private mapToDomain(raw: any): GameResult {
+  private mapToDomain(raw: RawGameResult): GameResult {
     const players = raw.playersJson as GameResultPlayer[];
     return new GameResult(
       raw.id,

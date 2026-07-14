@@ -60,7 +60,10 @@ export class GetLeaderboardUseCase {
         stats: {
           totalGames: userStats.totalGames,
           wins: userStats.wins,
-          winRate: userStats.totalGames > 0 ? userStats.wins / userStats.totalGames : 0,
+          winRate:
+            userStats.totalGames > 0
+              ? userStats.wins / userStats.totalGames
+              : 0,
         },
       },
     };
