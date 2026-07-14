@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, type NestModule, type MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './shared/database/prisma.module.js';
 import { RedisModule } from './shared/redis/redis.module.js';
@@ -11,6 +11,7 @@ import { MatchmakingModule } from './modules/matchmaking/matchmaking.module.js';
 import { LobbyModule } from './modules/lobby/lobby.module.js';
 import { AdminModule } from './modules/admin/admin.module.js';
 import { I18nModule } from './shared/i18n/i18n.module.js';
+import { I18nMiddleware } from './shared/i18n/i18n.middleware.js';
 
 @Module({
   imports: [
@@ -28,4 +29,8 @@ import { I18nModule } from './shared/i18n/i18n.module.js';
     AdminModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(I18nMiddleware).forRoutes('*');
+  }
+}
