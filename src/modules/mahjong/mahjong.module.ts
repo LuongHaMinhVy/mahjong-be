@@ -13,6 +13,7 @@ import { DrawTileUseCase } from './application/use-cases/draw-tile.use-case.js';
 import { DiscardTileUseCase } from './application/use-cases/discard-tile.use-case.js';
 import { ClaimMeldUseCase } from './application/use-cases/claim-meld.use-case.js';
 import { DeclareWinUseCase } from './application/use-cases/declare-win.use-case.js';
+import { DeclareRiichiUseCase } from './application/use-cases/declare-riichi.use-case.js';
 import { GetGameReplayUseCase } from './application/use-cases/get-game-replay.use-case.js';
 import { GameGateway } from './presentation/websocket/game.gateway.js';
 import { GameReplayController } from './presentation/controllers/game-replay.controller.js';
@@ -23,6 +24,7 @@ const USE_CASES = [
   DiscardTileUseCase,
   ClaimMeldUseCase,
   DeclareWinUseCase,
+  DeclareRiichiUseCase,
   GetGameReplayUseCase,
 ];
 
