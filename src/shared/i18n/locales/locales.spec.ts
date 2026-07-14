@@ -3,7 +3,7 @@ import { locales } from './index.js';
 describe('Locales Dictionary Integrity', () => {
   it('should have identical key structures across all languages', () => {
     const baseKeys = getKeys(locales.vi);
-    
+
     Object.entries(locales).forEach(([lang, dict]) => {
       const keys = getKeys(dict);
       expect(keys).toEqual(baseKeys);
