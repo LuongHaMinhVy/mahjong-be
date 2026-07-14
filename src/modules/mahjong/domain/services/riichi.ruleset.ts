@@ -182,6 +182,44 @@ export class RiichiRuleset extends IRuleset {
     return { winnerId, points: totalPoints, scoreMap };
   }
 
+  isTenpai(hand: Tile[]): boolean {
+    if (hand.length !== 13) return false;
+
+    const candidates: Tile[] = [];
+
+    // Man, Pin, Sou (1 to 9)
+    const suits: ('man' | 'pin' | 'sou')[] = ['man', 'pin', 'sou'];
+    for (const suit of suits) {
+      for (let val = 1; val <= 9; val++) {
+        candidates.push(
+          Tile.create(suit, val, 'number', `cand-${suit}-${val}`),
+        );
+      }
+    }
+
+    // Winds (1 to 4)
+    for (let val = 1; val <= 4; val++) {
+      candidates.push(Tile.create('honor', val, 'wind', `cand-wind-${val}`));
+    }
+
+    // Dragons (1 to 3)
+    for (let val = 1; val <= 3; val++) {
+      candidates.push(
+        Tile.create('honor', val, 'dragon', `cand-dragon-${val}`),
+      );
+    }
+
+    // Try adding each candidate and check if it forms a winning hand
+    for (const cand of candidates) {
+      const winResult = this.canWin(hand, cand);
+      if (winResult && winResult.isWin) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   private checkStandardShape(hand: Tile[]): boolean {
     if (hand.length !== 14) return false;
 
