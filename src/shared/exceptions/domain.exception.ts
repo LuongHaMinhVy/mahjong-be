@@ -5,6 +5,7 @@ export class DomainException extends Error {
     public readonly code: ErrorCode,
     message: string,
     public readonly statusCode: number = 400,
+    public readonly args?: Record<string, any>,
   ) {
     super(message);
     this.name = 'DomainException';
@@ -13,7 +14,9 @@ export class DomainException extends Error {
 
 export class NotFoundException extends DomainException {
   constructor(entity: string, id: string) {
-    super('NOT_FOUND', `${entity} with id ${id} not found`, 404);
+    super('NOT_FOUND', `${entity} with id ${id} not found`, 404, {
+      resource: entity,
+    });
   }
 }
 
