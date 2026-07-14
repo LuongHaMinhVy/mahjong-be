@@ -20,27 +20,32 @@ import { IMatchmakingRepository } from '../matchmaking/domain/repositories/match
   providers: [
     {
       provide: AdminGetUsersUseCase,
-      useFactory: (userRepo: IUserRepository) => new AdminGetUsersUseCase(userRepo),
+      useFactory: (userRepo: IUserRepository) =>
+        new AdminGetUsersUseCase(userRepo),
       inject: [IUserRepository],
     },
     {
       provide: AdminBanUserUseCase,
-      useFactory: (userRepo: IUserRepository) => new AdminBanUserUseCase(userRepo),
+      useFactory: (userRepo: IUserRepository) =>
+        new AdminBanUserUseCase(userRepo),
       inject: [IUserRepository],
     },
     {
       provide: AdminUpdateEloUseCase,
-      useFactory: (userRepo: IUserRepository) => new AdminUpdateEloUseCase(userRepo),
+      useFactory: (userRepo: IUserRepository) =>
+        new AdminUpdateEloUseCase(userRepo),
       inject: [IUserRepository],
     },
     {
       provide: AdminGetRoomsUseCase,
-      useFactory: (roomRepo: IRoomRepository) => new AdminGetRoomsUseCase(roomRepo),
+      useFactory: (roomRepo: IRoomRepository) =>
+        new AdminGetRoomsUseCase(roomRepo),
       inject: [IRoomRepository],
     },
     {
       provide: AdminForceCloseRoomUseCase,
-      useFactory: (roomRepo: IRoomRepository) => new AdminForceCloseRoomUseCase(roomRepo),
+      useFactory: (roomRepo: IRoomRepository) =>
+        new AdminForceCloseRoomUseCase(roomRepo),
       inject: [IRoomRepository],
     },
     {

@@ -65,6 +65,20 @@ export class RedisRoomRepository implements IRoomRepository {
     return rooms;
   }
 
+  async findAll(): Promise<Room[]> {
+    const ids = await this.redis.smembers(this.activeSetKey);
+    if (!ids || ids.length === 0) return [];
+
+    const rooms: Room[] = [];
+    for (const id of ids) {
+      const room = await this.findById(id);
+      if (room) {
+        rooms.push(room);
+      }
+    }
+    return rooms;
+  }
+
   private reconstructRoom(raw: Room): Room {
     const players = (raw.players || []).map(
       (p: RoomPlayer) =>

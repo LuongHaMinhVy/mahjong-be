@@ -35,11 +35,23 @@ describe('RespondToMatchUseCase', () => {
   });
 
   it('should decline match and requeue other players', async () => {
-    const ticket = new MatchTicket('t1', 'riichi', ['u1', 'u2', 'u3', 'u4'], ['u1'], new Date());
+    const ticket = new MatchTicket(
+      't1',
+      'riichi',
+      ['u1', 'u2', 'u3', 'u4'],
+      ['u1'],
+      new Date(),
+    );
     mockMatchmakingRepo.getTicket.mockResolvedValue(ticket);
-    mockMatchmakingRepo.getJoinedAt.mockResolvedValue(new Date('2026-07-14T00:00:00Z'));
+    mockMatchmakingRepo.getJoinedAt.mockResolvedValue(
+      new Date('2026-07-14T00:00:00Z'),
+    );
 
-    const result = await useCase.execute({ userId: 'u2', ticketId: 't1', accept: false });
+    const result = await useCase.execute({
+      userId: 'u2',
+      ticketId: 't1',
+      accept: false,
+    });
 
     expect(result.status).toBe('cancelled');
     expect(mockMatchmakingRepo.deleteTicket).toHaveBeenCalledWith('t1');
@@ -47,21 +59,41 @@ describe('RespondToMatchUseCase', () => {
   });
 
   it('should accept and save updated ticket if not fully accepted yet', async () => {
-    const ticket = new MatchTicket('t1', 'riichi', ['u1', 'u2', 'u3', 'u4'], ['u1'], new Date());
+    const ticket = new MatchTicket(
+      't1',
+      'riichi',
+      ['u1', 'u2', 'u3', 'u4'],
+      ['u1'],
+      new Date(),
+    );
     mockMatchmakingRepo.getTicket.mockResolvedValue(ticket);
 
-    const result = await useCase.execute({ userId: 'u2', ticketId: 't1', accept: true });
+    const result = await useCase.execute({
+      userId: 'u2',
+      ticketId: 't1',
+      accept: true,
+    });
 
     expect(result.status).toBe('accepted');
     expect(mockMatchmakingRepo.saveTicket).toHaveBeenCalled();
   });
 
   it('should delete ticket, create room, toggle ready and start game if fully accepted', async () => {
-    const ticket = new MatchTicket('t1', 'riichi', ['u1', 'u2', 'u3', 'u4'], ['u1', 'u2', 'u3'], new Date());
+    const ticket = new MatchTicket(
+      't1',
+      'riichi',
+      ['u1', 'u2', 'u3', 'u4'],
+      ['u1', 'u2', 'u3'],
+      new Date(),
+    );
     mockMatchmakingRepo.getTicket.mockResolvedValue(ticket);
     mockCreateRoomUseCase.execute.mockResolvedValue({ id: 'room-1' });
 
-    const result = await useCase.execute({ userId: 'u4', ticketId: 't1', accept: true });
+    const result = await useCase.execute({
+      userId: 'u4',
+      ticketId: 't1',
+      accept: true,
+    });
 
     expect(result.status).toBe('completed');
     expect(result.roomId).toBe('room-1');

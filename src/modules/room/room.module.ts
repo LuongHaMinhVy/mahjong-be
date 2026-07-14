@@ -20,11 +20,7 @@ const USE_CASES = [
 ];
 
 @Module({
-  imports: [
-    PrismaModule,
-    AuthModule,
-    forwardRef(() => LobbyModule),
-  ],
+  imports: [PrismaModule, AuthModule, forwardRef(() => LobbyModule)],
   providers: [
     {
       provide: IRoomRepository,

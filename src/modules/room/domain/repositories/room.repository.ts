@@ -5,4 +5,5 @@ export abstract class IRoomRepository {
   abstract findById(id: string): Promise<Room | null>;
   abstract delete(id: string): Promise<void>;
   abstract findAllWaiting(): Promise<Room[]>;
+  abstract findAll(): Promise<Room[]>;
 }

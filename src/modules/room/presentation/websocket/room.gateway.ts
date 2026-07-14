@@ -68,6 +68,16 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected from /room: ${client.id}`);
+    const token = this.extractToken(client);
+    if (token) {
+      try {
+        const payload = await this.jwtTokenService?.verifyAccessToken(token);
+        const clientWithUser = client as Socket & { user?: JwtPayload };
+        clientWithUser.user = payload;
+      } catch {
+        // Ignored
+      }
+    }
   }
 
   @UseGuards(WsAuthGuard)
@@ -144,7 +154,9 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
           .emit('room:deleted', { roomId: data.roomId });
         if (ruleset && this.lobbyGateway) {
           this.lobbyGateway.broadcastRooms(ruleset).catch((err) => {
-            this.logger.error(`Failed to broadcast rooms on delete: ${err.message}`);
+            this.logger.error(
+              `Failed to broadcast rooms on delete: ${err.message}`,
+            );
           });
         }
       }
@@ -193,7 +205,9 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server.to(data.roomId).emit('room:started', this.formatRoom(room));
       if (this.lobbyGateway) {
         this.lobbyGateway.broadcastRooms(room.ruleset).catch((err) => {
-          this.logger.error(`Failed to broadcast rooms on start: ${err.message}`);
+          this.logger.error(
+            `Failed to broadcast rooms on start: ${err.message}`,
+          );
         });
       }
     } catch (err) {
@@ -202,8 +216,6 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.emit('error', msg);
     }
   }
-
-
 
   private broadcastRoomUpdate(roomId: string, room: Room) {
     this.server.to(roomId).emit('room:updated', this.formatRoom(room));

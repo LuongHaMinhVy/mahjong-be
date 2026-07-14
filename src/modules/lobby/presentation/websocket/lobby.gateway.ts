@@ -44,7 +44,9 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const clientWithUser = client as Socket & { user?: JwtPayload };
       clientWithUser.user = payload;
       await this.lobbyService.setUserOnline(payload.sub);
-      this.logger.log(`User ${payload.sub} marked online via /lobby connection`);
+      this.logger.log(
+        `User ${payload.sub} marked online via /lobby connection`,
+      );
     } catch (err) {
       this.logger.warn(`Disconnecting client ${client.id} - invalid token`);
       client.disconnect();
@@ -69,7 +71,9 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     const roomName = `lobby:ruleset:${data.ruleset}`;
     await client.join(roomName);
-    this.logger.log(`User ${client.user.sub} subscribed to ruleset ${data.ruleset}`);
+    this.logger.log(
+      `User ${client.user.sub} subscribed to ruleset ${data.ruleset}`,
+    );
 
     const rooms = await this.lobbyService.getRoomsByRuleset(data.ruleset);
     client.emit('lobby:rooms', this.formatRooms(rooms));
@@ -83,12 +87,16 @@ export class LobbyGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     const roomName = `lobby:ruleset:${data.ruleset}`;
     await client.leave(roomName);
-    this.logger.log(`User ${client.user.sub} unsubscribed from ruleset ${data.ruleset}`);
+    this.logger.log(
+      `User ${client.user.sub} unsubscribed from ruleset ${data.ruleset}`,
+    );
   }
 
   async broadcastRooms(ruleset: 'riichi' | 'chinese') {
     const rooms = await this.lobbyService.getRoomsByRuleset(ruleset);
-    this.server.to(`lobby:ruleset:${ruleset}`).emit('lobby:rooms', this.formatRooms(rooms));
+    this.server
+      .to(`lobby:ruleset:${ruleset}`)
+      .emit('lobby:rooms', this.formatRooms(rooms));
     this.logger.log(`Broadcasted rooms list update for ruleset ${ruleset}`);
   }
 

@@ -5,17 +5,8 @@ import { LobbyService } from './application/services/lobby.service.js';
 import { LobbyGateway } from './presentation/websocket/lobby.gateway.js';
 
 @Module({
-  imports: [
-    AuthModule,
-    forwardRef(() => RoomModule),
-  ],
-  providers: [
-    LobbyService,
-    LobbyGateway,
-  ],
-  exports: [
-    LobbyService,
-    LobbyGateway,
-  ],
+  imports: [AuthModule, forwardRef(() => RoomModule)],
+  providers: [LobbyService, LobbyGateway],
+  exports: [LobbyService, LobbyGateway],
 })
 export class LobbyModule {}

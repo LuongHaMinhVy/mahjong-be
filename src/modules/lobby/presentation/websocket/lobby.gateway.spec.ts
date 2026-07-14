@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, type TestingModule } from '@nestjs/testing';
 import { LobbyGateway } from './lobby.gateway.js';
 import { LobbyService } from '../../application/services/lobby.service.js';
 import { JwtTokenService } from '../../../auth/infrastructure/token/jwt-token.service.js';
@@ -60,7 +60,9 @@ describe('LobbyGateway', () => {
 
   describe('handleConnection / handleDisconnect', () => {
     it('should set user online on valid connection', async () => {
-      mockJwtTokenService.verifyAccessToken.mockResolvedValue({ sub: 'user-1' } as any);
+      mockJwtTokenService.verifyAccessToken.mockResolvedValue({
+        sub: 'user-1',
+      } as any);
       await gateway.handleConnection(mockSocket);
       expect(mockLobbyService.setUserOnline).toHaveBeenCalledWith('user-1');
     });
@@ -80,14 +82,24 @@ describe('LobbyGateway', () => {
   describe('lobby:subscribe', () => {
     it('should join user to ruleset room and emit rooms list', async () => {
       const mockRooms = [
-        { id: '1', name: 'R1', hostId: 'h1', ruleset: 'riichi', status: 'waiting', players: [] },
+        {
+          id: '1',
+          name: 'R1',
+          hostId: 'h1',
+          ruleset: 'riichi',
+          status: 'waiting',
+          players: [],
+        },
       ];
       mockLobbyService.getRoomsByRuleset.mockResolvedValue(mockRooms);
 
       await gateway.handleSubscribe(mockSocket, { ruleset: 'riichi' });
 
       expect(mockSocket.join).toHaveBeenCalledWith('lobby:ruleset:riichi');
-      expect(mockSocket.emit).toHaveBeenCalledWith('lobby:rooms', expect.any(Array));
+      expect(mockSocket.emit).toHaveBeenCalledWith(
+        'lobby:rooms',
+        expect.any(Array),
+      );
     });
   });
 

@@ -39,12 +39,20 @@ describe('JoinQueueUseCase & LeaveQueueUseCase', () => {
 
     await joinUseCase.execute({ userId: 'u1', ruleset: 'riichi' });
 
-    expect(mockMatchmakingRepo.addToQueue).toHaveBeenCalledWith('riichi', 'u1', 1250, expect.any(Date));
+    expect(mockMatchmakingRepo.addToQueue).toHaveBeenCalledWith(
+      'riichi',
+      'u1',
+      1250,
+      expect.any(Date),
+    );
   });
 
   it('should remove player from queue', async () => {
     await leaveUseCase.execute({ userId: 'u1', ruleset: 'riichi' });
 
-    expect(mockMatchmakingRepo.removeFromQueue).toHaveBeenCalledWith('riichi', 'u1');
+    expect(mockMatchmakingRepo.removeFromQueue).toHaveBeenCalledWith(
+      'riichi',
+      'u1',
+    );
   });
 });

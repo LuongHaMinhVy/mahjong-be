@@ -17,7 +17,11 @@ describe('MatchmakingGateway', () => {
       emit: jest.fn(),
     };
 
-    gateway = new MatchmakingGateway(mockJoinUseCase, mockLeaveUseCase, mockRespondUseCase);
+    gateway = new MatchmakingGateway(
+      mockJoinUseCase,
+      mockLeaveUseCase,
+      mockRespondUseCase,
+    );
     gateway.server = mockServer;
   });
 
