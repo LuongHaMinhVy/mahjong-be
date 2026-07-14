@@ -64,7 +64,7 @@ export class RedisGameStateRepository implements IGameStateRepository {
   }
 
   private reconstructGameState(raw: any): GameState {
-    return new GameState(
+    const state = new GameState(
       raw.id,
       raw.roomId,
       raw.rulesetName,
@@ -81,5 +81,18 @@ export class RedisGameStateRepository implements IGameStateRepository {
           )
         : [[], [], [], []],
     );
+
+    state.actions = raw.actions
+      ? raw.actions.map((act: any) => ({
+          sequence: act.sequence,
+          playerId: act.playerId,
+          type: act.type,
+          tile: act.tile ? this.reconstructTile(act.tile) : undefined,
+          extra: act.extra,
+          timestamp: act.timestamp,
+        }))
+      : [];
+
+    return state;
   }
 }
