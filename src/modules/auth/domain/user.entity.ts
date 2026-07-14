@@ -11,6 +11,8 @@ export interface UserProps {
   avatar?: string | null;
   elo?: number;
   isEmailVerified?: boolean;
+  role?: string;
+  bannedUntil?: Date | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -23,6 +25,8 @@ export class User {
   private _avatar: string | null;
   private _elo: number;
   private _isEmailVerified: boolean;
+  private _role: string;
+  private _bannedUntil: Date | null;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
 
@@ -34,6 +38,8 @@ export class User {
     this._avatar = props.avatar || null;
     this._elo = props.elo ?? 1000;
     this._isEmailVerified = props.isEmailVerified ?? false;
+    this._role = props.role || 'USER';
+    this._bannedUntil = props.bannedUntil || null;
     this._createdAt = props.createdAt || new Date();
     this._updatedAt = props.updatedAt || new Date();
   }
@@ -74,6 +80,14 @@ export class User {
     return this._updatedAt;
   }
 
+  get role(): string {
+    return this._role;
+  }
+
+  get bannedUntil(): Date | null {
+    return this._bannedUntil;
+  }
+
   public verifyEmail(): void {
     this._isEmailVerified = true;
     this.touch();
@@ -102,6 +116,20 @@ export class User {
 
   public verifyPassword(plainText: string): boolean {
     return this._password.compare(plainText);
+  }
+
+  public isBanned(): boolean {
+    return this._bannedUntil ? this._bannedUntil > new Date() : false;
+  }
+
+  public ban(until: Date | null): void {
+    this._bannedUntil = until;
+    this.touch();
+  }
+
+  public updateRole(role: string): void {
+    this._role = role;
+    this.touch();
   }
 
   private touch(): void {

@@ -13,6 +13,8 @@ export class UserMapper {
       avatar: raw.avatar,
       elo: raw.elo,
       isEmailVerified: raw.isEmailVerified,
+      role: raw.role,
+      bannedUntil: raw.bannedUntil,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
     });
@@ -27,6 +29,8 @@ export class UserMapper {
       avatar: domain.avatar,
       elo: domain.elo,
       isEmailVerified: domain.isEmailVerified,
+      role: domain.role,
+      bannedUntil: domain.bannedUntil,
     };
   }
 }
