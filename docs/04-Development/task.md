@@ -75,7 +75,7 @@
 | 72  | Admin - Admin Module and App Integration                              | completed |
 | 73  | i18n - Update User Domain Entity & Prisma Schema                      | completed |
 | 74  | i18n - Create Translation Dictionaries                                | completed |
-| 75  | i18n - Implement I18nContext and I18nService                          | not_started |
+| 75  | i18n - Implement I18nContext and I18nService                          | completed |
 | 76  | i18n - Implement I18nMiddleware & Register Globally                   | not_started |
 | 77  | i18n - Standardise Validation Errors in ValidationPipe                | not_started |
 | 78  | i18n - Update GlobalExceptionFilter to Translate Messages              | not_started |

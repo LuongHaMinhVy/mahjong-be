@@ -10,12 +10,14 @@ import { LeaderboardModule } from './modules/leaderboard/leaderboard.module.js';
 import { MatchmakingModule } from './modules/matchmaking/matchmaking.module.js';
 import { LobbyModule } from './modules/lobby/lobby.module.js';
 import { AdminModule } from './modules/admin/admin.module.js';
+import { I18nModule } from './shared/i18n/i18n.module.js';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     RedisModule,
+    I18nModule,
     AuthModule,
     MahjongModule,
     UsersModule,
