@@ -20,6 +20,7 @@ import { LobbyService } from '../../application/services/lobby.service.js';
 import { JwtPayload } from '../../../../shared/decorators/current-user.decorator.js';
 import { Room } from '../../domain/entities/room.entity.js';
 import { JwtTokenService } from '../../../auth/infrastructure/token/jwt-token.service.js';
+import { IRoomRepository } from '../../domain/repositories/room.repository.js';
 
 @WebSocketGateway({
   cors: {
@@ -40,6 +41,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly leaveRoomUseCase: LeaveRoomUseCase,
     private readonly toggleReadyUseCase: ToggleReadyUseCase,
     private readonly startGameUseCase: StartGameUseCase,
+    private readonly roomRepository: IRoomRepository,
     private readonly jwtTokenService?: JwtTokenService, // Optional to avoid breaking unit tests
   ) {}
 
@@ -120,14 +122,17 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     const userId = client.user.sub;
     try {
-      const room = await this.leaveRoomUseCase.execute({
+      const result = await this.leaveRoomUseCase.execute({
         userId,
         roomId: data.roomId,
       });
 
       await client.leave(data.roomId);
-      if (room) {
-        this.broadcastRoomUpdate(data.roomId, room);
+      if (!result.closed) {
+        const room = await this.roomRepository.findById(data.roomId);
+        if (room) {
+          this.broadcastRoomUpdate(data.roomId, room);
+        }
       } else {
         // Room was deleted because it is empty
         this.server.to(data.roomId).emit('room:deleted', { roomId: data.roomId });
@@ -142,13 +147,14 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('room:ready')
   async handleReady(
     @ConnectedSocket() client: Socket & { user: JwtPayload },
-    @MessageBody() data: { roomId: string },
+    @MessageBody() data: { roomId: string; isReady: boolean },
   ) {
     const userId = client.user.sub;
     try {
       const room = await this.toggleReadyUseCase.execute({
         userId,
         roomId: data.roomId,
+        isReady: data.isReady,
       });
 
       this.broadcastRoomUpdate(data.roomId, room);
@@ -167,7 +173,7 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const userId = client.user.sub;
     try {
       const room = await this.startGameUseCase.execute({
-        userId,
+        hostId: userId,
         roomId: data.roomId,
       });
 
