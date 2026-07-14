@@ -14,7 +14,7 @@ import { JoinQueueUseCase } from '../../application/use-cases/join-queue.use-cas
 import { LeaveQueueUseCase } from '../../application/use-cases/leave-queue.use-case.js';
 import { RespondToMatchUseCase } from '../../application/use-cases/respond-to-match.use-case.js';
 import { type IMatchmakingLobbyGateway } from '../../application/services/matchmaking-processor.service.js';
-import { type JwtPayload } from '../../../auth/domain/jwt-payload.interface.js';
+import { type JwtPayload } from '../../../../shared/decorators/current-user.decorator.js';
 
 @WebSocketGateway({
   namespace: 'matchmaking',

@@ -15,6 +15,10 @@ export const ErrorCodes = {
   ALREADY_IN_ROOM: 'ALREADY_IN_ROOM',
   PLAYER_NOT_IN_ROOM: 'PLAYER_NOT_IN_ROOM',
   CANNOT_START: 'CANNOT_START',
+
+  // Matchmaking
+  MATCH_NOT_FOUND: 'MATCH_NOT_FOUND',
+  NOT_IN_MATCH: 'NOT_IN_MATCH',
 } as const;
 
 export type ErrorCode = (typeof ErrorCodes)[keyof typeof ErrorCodes];
