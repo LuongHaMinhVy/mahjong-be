@@ -66,3 +66,10 @@
 | 63 | Lobby - Module Registration and Room Gateway Notification Integration | completed |
 | 64 | Lobby - Clean Up and Legacy Code Removal | completed |
 | 65 | Lobby - Final Verification and Build | completed |
+| 66 | Admin - Database Migration & Schema Update | pending |
+| 67 | Admin - User Entity & Mapper Update | pending |
+| 68 | Admin - IUserRepository & PrismaUserRepository Update | pending |
+| 69 | Admin - Custom Decorator and RolesGuard | pending |
+| 70 | Admin - Create Use Cases for Admin Operations | pending |
+| 71 | Admin - DTOs & Admin Controller | pending |
+| 72 | Admin - Admin Module and App Integration | pending |
