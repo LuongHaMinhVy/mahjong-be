@@ -1,10 +1,15 @@
-import { type User as PrismaUser, type UserSetting as PrismaUserSetting } from '@prisma/client';
+import {
+  type User as PrismaUser,
+  type UserSetting as PrismaUserSetting,
+} from '@prisma/client';
 import { User } from '../../domain/user.entity.js';
 import { Email } from '../../domain/value-objects/email.vo.js';
 import { Password } from '../../domain/value-objects/password.vo.js';
 
 export class UserMapper {
-  public static toDomain(raw: PrismaUser & { settings?: PrismaUserSetting | null }): User {
+  public static toDomain(
+    raw: PrismaUser & { settings?: PrismaUserSetting | null },
+  ): User {
     return new User({
       id: raw.id,
       email: new Email(raw.email),
@@ -14,10 +19,12 @@ export class UserMapper {
       elo: raw.elo,
       isEmailVerified: raw.isEmailVerified,
       role: raw.role,
-      settings: raw.settings ? {
-        locale: raw.settings.locale,
-        soundEnabled: raw.settings.soundEnabled,
-      } : undefined,
+      settings: raw.settings
+        ? {
+            locale: raw.settings.locale,
+            soundEnabled: raw.settings.soundEnabled,
+          }
+        : undefined,
       bannedUntil: raw.bannedUntil,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
