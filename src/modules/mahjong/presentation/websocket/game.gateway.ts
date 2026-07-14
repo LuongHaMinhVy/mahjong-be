@@ -15,6 +15,7 @@ import { DrawTileUseCase } from '../../application/use-cases/draw-tile.use-case.
 import { DiscardTileUseCase } from '../../application/use-cases/discard-tile.use-case.js';
 import { ClaimMeldUseCase } from '../../application/use-cases/claim-meld.use-case.js';
 import { DeclareWinUseCase } from '../../application/use-cases/declare-win.use-case.js';
+import { DeclareRiichiUseCase } from '../../application/use-cases/declare-riichi.use-case.js';
 import { IGameStateRepository } from '../../domain/repositories/game-state.repository.js';
 import { JwtPayload } from '../../../../shared/decorators/current-user.decorator.js';
 import { GameState } from '../../domain/entities/game-state.entity.js';
@@ -39,6 +40,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly discardTileUseCase: DiscardTileUseCase,
     private readonly claimMeldUseCase: ClaimMeldUseCase,
     private readonly declareWinUseCase: DeclareWinUseCase,
+    private readonly declareRiichiUseCase: DeclareRiichiUseCase,
     private readonly gameStateRepository: IGameStateRepository,
   ) {}
 
@@ -191,6 +193,30 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       await this.broadcastGameState(data.gameId, state);
     } catch (err: any) {
       this.logger.error(`Claim meld failed: ${err.message}`);
+      client.emit('error', err.message);
+    }
+  }
+
+  @UseGuards(WsAuthGuard)
+  @SubscribeMessage('game:riichi')
+  async handleDeclareRiichi(
+    @ConnectedSocket() client: Socket & { user: JwtPayload },
+    @MessageBody() data: { gameId: string; tileId: string },
+  ) {
+    const userId = client.user.sub;
+    try {
+      await this.declareRiichiUseCase.execute({
+        gameId: data.gameId,
+        playerId: userId,
+        tileId: data.tileId,
+      });
+      const state = await this.gameStateRepository.findById(data.gameId);
+      if (!state) {
+        throw new Error('Game state not found after declaring Riichi');
+      }
+      await this.broadcastGameState(data.gameId, state);
+    } catch (err: any) {
+      this.logger.error(`Declare Riichi failed: ${err.message}`);
       client.emit('error', err.message);
     }
   }
