@@ -60,8 +60,8 @@
 | 57 | Matchmaking - Matchmaking Processor (Matching Loop logic) | completed |
 | 58 | Matchmaking - Application Layer (Respond to Match Use Case) | completed |
 | 59 | Matchmaking - Presentation Layer (WebSocket Gateway) | completed |
-| 60 | Lobby - Create LobbyService and User Status Tracking | in_progress |
-| 61 | Lobby - Implement Room Discovery in LobbyService | pending |
+| 60 | Lobby - Create LobbyService and User Status Tracking | completed |
+| 61 | Lobby - Implement Room Discovery in LobbyService | in_progress |
 | 62 | Lobby - Create LobbyGateway | pending |
 | 63 | Lobby - Module Registration and Room Gateway Notification Integration | pending |
 | 64 | Lobby - Clean Up and Legacy Code Removal | pending |

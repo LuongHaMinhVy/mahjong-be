@@ -2,6 +2,8 @@ import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LobbyService } from './lobby.service.js';
 
+import { IRoomRepository } from '../../../room/domain/repositories/room.repository.js';
+
 describe('LobbyService', () => {
   let service: LobbyService;
   let mockRedis: {
@@ -9,6 +11,9 @@ describe('LobbyService', () => {
     srem: jest.Mock;
     sismember: jest.Mock;
     scard: jest.Mock;
+  };
+  let mockRoomRepository: {
+    findAllWaiting: jest.Mock;
   };
 
   beforeEach(async () => {
@@ -18,11 +23,15 @@ describe('LobbyService', () => {
       sismember: jest.fn(),
       scard: jest.fn(),
     };
+    mockRoomRepository = {
+      findAllWaiting: jest.fn(),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LobbyService,
         { provide: 'REDIS', useValue: mockRedis },
+        { provide: IRoomRepository, useValue: mockRoomRepository },
       ],
     }).compile();
 
@@ -51,5 +60,18 @@ describe('LobbyService', () => {
     const count = await service.getOnlineCount();
     expect(count).toBe(5);
     expect(mockRedis.scard).toHaveBeenCalledWith('mahjong:online');
+  });
+
+  it('should filter rooms by ruleset', async () => {
+    const mockRooms = [
+      { id: 'room-1', name: 'R1', ruleset: 'riichi', status: 'waiting' },
+      { id: 'room-2', name: 'R2', ruleset: 'chinese', status: 'waiting' },
+    ];
+    mockRoomRepository.findAllWaiting.mockResolvedValue(mockRooms);
+
+    const riichiRooms = await service.getRoomsByRuleset('riichi');
+    expect(riichiRooms).toHaveLength(1);
+    expect(riichiRooms[0].id).toBe('room-1');
+    expect(mockRoomRepository.findAllWaiting).toHaveBeenCalled();
   });
 });
