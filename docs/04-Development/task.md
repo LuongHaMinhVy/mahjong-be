@@ -51,4 +51,13 @@
 | 48 | Lobby & Room - Room & Lobby Gateways | completed |
 | 49 | Lobby & Room - Module Registration & App Integration | completed |
 | 50 | Lobby & Room - Integration Verification | completed |
+| 51 | Leaderboard - Domain Layer | pending |
+| 52 | Leaderboard - Application Layer (GetLeaderboardUseCase) | pending |
+| 53 | Leaderboard - Infrastructure & Presentation Layer | pending |
+| 54 | Matchmaking - Domain Layer | pending |
+| 55 | Matchmaking - Redis Infrastructure Repository | pending |
+| 56 | Matchmaking - Application Layer (Join & Leave Use Cases) | pending |
+| 57 | Matchmaking - Matchmaking Processor (Matching Loop logic) | pending |
+| 58 | Matchmaking - Application Layer (Respond to Match Use Case) | pending |
+| 59 | Matchmaking - Presentation Layer (WebSocket Gateway) | pending |
 
