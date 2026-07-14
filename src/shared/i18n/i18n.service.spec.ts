@@ -40,6 +40,30 @@ describe('I18nService', () => {
     });
   });
 
+  it('should translate deep nested keys from game category', () => {
+    I18nContext.run('vi', () => {
+      const result = service.translate('game.ruleset.RIICHI');
+      expect(result).toBe('Luật Nhật (Riichi)');
+    });
+
+    I18nContext.run('en', () => {
+      const result = service.translate('game.ruleset.SICHUAN');
+      expect(result).toBe('Sichuan Rules');
+    });
+  });
+
+  it('should translate email subject and body with interpolation', () => {
+    I18nContext.run('vi', () => {
+      const subject = service.translate('email.verifyEmail.subject');
+      const body = service.translate('email.verifyEmail.body', {
+        name: 'Vy',
+        code: '123456',
+      });
+      expect(subject).toBe('Xác thực tài khoản');
+      expect(body).toBe('Chào Vy, mã xác thực của bạn là 123456');
+    });
+  });
+
   it('should fallback to key itself if key is not found', () => {
     const result = service.translate('errors.SOME_NON_EXISTING_KEY');
     expect(result).toBe('errors.SOME_NON_EXISTING_KEY');
