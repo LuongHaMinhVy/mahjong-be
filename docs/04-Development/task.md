@@ -64,5 +64,5 @@
 | 61 | Lobby - Implement Room Discovery in LobbyService | completed |
 | 62 | Lobby - Create LobbyGateway | completed |
 | 63 | Lobby - Module Registration and Room Gateway Notification Integration | completed |
-| 64 | Lobby - Clean Up and Legacy Code Removal | in_progress |
-| 65 | Lobby - Final Verification and Build | pending |
+| 64 | Lobby - Clean Up and Legacy Code Removal | completed |
+| 65 | Lobby - Final Verification and Build | completed |
