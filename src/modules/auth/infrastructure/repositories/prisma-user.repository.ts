@@ -19,6 +19,8 @@ export class PrismaUserRepository implements IUserRepository {
         avatar: raw.avatar,
         elo: raw.elo,
         isEmailVerified: raw.isEmailVerified,
+        role: raw.role,
+        bannedUntil: raw.bannedUntil,
       },
       create: {
         id: raw.id,
@@ -28,6 +30,8 @@ export class PrismaUserRepository implements IUserRepository {
         avatar: raw.avatar,
         elo: raw.elo,
         isEmailVerified: raw.isEmailVerified,
+        role: raw.role,
+        bannedUntil: raw.bannedUntil,
       },
     });
 
@@ -48,5 +52,37 @@ export class PrismaUserRepository implements IUserRepository {
     });
     if (!raw) return null;
     return UserMapper.toDomain(raw);
+  }
+
+  async findMany(options: {
+    page: number;
+    limit: number;
+    search?: string;
+  }): Promise<{ users: User[]; total: number }> {
+    const { page, limit, search } = options;
+    const skip = (page - 1) * limit;
+    const where = search
+      ? {
+          OR: [
+            { email: { contains: search, mode: 'insensitive' as const } },
+            { displayName: { contains: search, mode: 'insensitive' as const } },
+          ],
+        }
+      : {};
+
+    const [rawUsers, total] = await Promise.all([
+      this.prisma.user.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.user.count({ where }),
+    ]);
+
+    return {
+      users: rawUsers.map((u) => UserMapper.toDomain(u)),
+      total,
+    };
   }
 }
