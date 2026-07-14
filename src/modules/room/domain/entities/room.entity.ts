@@ -1,4 +1,4 @@
-import { RoomPlayer } from '../value-objects/room-player.vo.js';
+import { type RoomPlayer } from '../value-objects/room-player.vo.js';
 import { DomainException } from '../../../../shared/exceptions/domain.exception.js';
 
 export class Room {

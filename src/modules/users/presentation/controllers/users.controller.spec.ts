@@ -1,8 +1,8 @@
 import { jest } from '@jest/globals';
 import { UsersController } from './users.controller.js';
-import { GetUserProfileUseCase } from '../../application/use-cases/get-user-profile.use-case.js';
-import { UpdateUserProfileUseCase } from '../../application/use-cases/update-user-profile.use-case.js';
-import { GetMatchHistoryUseCase } from '../../application/use-cases/get-match-history.use-case.js';
+import { type GetUserProfileUseCase } from '../../application/use-cases/get-user-profile.use-case.js';
+import { type UpdateUserProfileUseCase } from '../../application/use-cases/update-user-profile.use-case.js';
+import { type GetMatchHistoryUseCase } from '../../application/use-cases/get-match-history.use-case.js';
 import { ApiResponseDto } from '../../../../shared/dto/api-response.dto.js';
 
 describe('UsersController', () => {

@@ -1,6 +1,9 @@
-import { Room } from '../../domain/entities/room.entity.js';
-import { IRoomRepository } from '../../domain/repositories/room.repository.js';
-import { NotFoundException, UnauthorizedException } from '../../../../shared/exceptions/domain.exception.js';
+import { type Room } from '../../domain/entities/room.entity.js';
+import { type IRoomRepository } from '../../domain/repositories/room.repository.js';
+import {
+  NotFoundException,
+  UnauthorizedException,
+} from '../../../../shared/exceptions/domain.exception.js';
 
 export interface StartGameInput {
   hostId: string;

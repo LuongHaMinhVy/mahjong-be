@@ -1,4 +1,4 @@
-import { UserStats } from './user-stats.vo.js';
+import { type UserStats } from './user-stats.vo.js';
 
 describe('UserStats interface structure', () => {
   it('should define correct properties for UserStats', () => {

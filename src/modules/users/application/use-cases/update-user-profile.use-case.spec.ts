@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
 import { UpdateUserProfileUseCase } from './update-user-profile.use-case.js';
-import { IUserRepository } from '../../../auth/domain/user.repository.js';
+import { type IUserRepository } from '../../../auth/domain/user.repository.js';
 import { User } from '../../../auth/domain/user.entity.js';
 import { Email } from '../../../auth/domain/value-objects/email.vo.js';
 import { Password } from '../../../auth/domain/value-objects/password.vo.js';
@@ -22,7 +22,7 @@ describe('UpdateUserProfileUseCase', () => {
   it('should throw if user does not exist', async () => {
     mockUserRepo.findById.mockResolvedValue(null);
     await expect(
-      useCase.execute({ userId: 'invalid', displayName: 'New Name' })
+      useCase.execute({ userId: 'invalid', displayName: 'New Name' }),
     ).rejects.toThrow('User not found');
   });
 

@@ -1,4 +1,4 @@
-import { IRoomRepository } from '../../domain/repositories/room.repository.js';
+import { type IRoomRepository } from '../../domain/repositories/room.repository.js';
 import { NotFoundException } from '../../../../shared/exceptions/domain.exception.js';
 
 export interface LeaveRoomInput {

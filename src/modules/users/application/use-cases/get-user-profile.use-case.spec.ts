@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals';
 import { GetUserProfileUseCase } from './get-user-profile.use-case.js';
-import { IUserStatsRepository } from '../../domain/repositories/user-stats.repository.js';
-import { IUserRepository } from '../../../auth/domain/user.repository.js';
+import { type IUserStatsRepository } from '../../domain/repositories/user-stats.repository.js';
+import { type IUserRepository } from '../../../auth/domain/user.repository.js';
 import { User } from '../../../auth/domain/user.entity.js';
 import { Email } from '../../../auth/domain/value-objects/email.vo.js';
 import { Password } from '../../../auth/domain/value-objects/password.vo.js';
@@ -28,7 +28,9 @@ describe('GetUserProfileUseCase', () => {
 
   it('should throw an error if user is not found', async () => {
     mockUserRepo.findById.mockResolvedValue(null);
-    await expect(useCase.execute('invalid-id')).rejects.toThrow('User not found');
+    await expect(useCase.execute('invalid-id')).rejects.toThrow(
+      'User not found',
+    );
   });
 
   it('should return user profile combined with statistics', async () => {

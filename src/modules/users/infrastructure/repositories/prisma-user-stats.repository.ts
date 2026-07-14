@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../shared/database/prisma.service.js';
 import { IUserStatsRepository } from '../../domain/repositories/user-stats.repository.js';
 import { UserStats } from '../../domain/value-objects/user-stats.vo.js';
-import { GameResult, GameResultPlayer } from '../../../mahjong/domain/entities/game-result.entity.js';
+import {
+  GameResult,
+  GameResultPlayer,
+} from '../../../mahjong/domain/entities/game-result.entity.js';
 import { DomainException } from '../../../../shared/exceptions/domain.exception.js';
 
 @Injectable()

@@ -1,14 +1,14 @@
 import { jest } from '@jest/globals';
 import { RoomGateway } from './room.gateway.js';
-import { CreateRoomUseCase } from '../../application/use-cases/create-room.use-case.js';
-import { JoinRoomUseCase } from '../../application/use-cases/join-room.use-case.js';
-import { LeaveRoomUseCase } from '../../application/use-cases/leave-room.use-case.js';
-import { ToggleReadyUseCase } from '../../application/use-cases/toggle-ready.use-case.js';
-import { StartGameUseCase } from '../../application/use-cases/start-game.use-case.js';
-import { LobbyService } from '../../application/services/lobby.service.js';
+import { type CreateRoomUseCase } from '../../application/use-cases/create-room.use-case.js';
+import { type JoinRoomUseCase } from '../../application/use-cases/join-room.use-case.js';
+import { type LeaveRoomUseCase } from '../../application/use-cases/leave-room.use-case.js';
+import { type ToggleReadyUseCase } from '../../application/use-cases/toggle-ready.use-case.js';
+import { type StartGameUseCase } from '../../application/use-cases/start-game.use-case.js';
+import { type LobbyService } from '../../application/services/lobby.service.js';
 import { Room } from '../../domain/entities/room.entity.js';
 import { RoomPlayer } from '../../domain/value-objects/room-player.vo.js';
-import { IRoomRepository } from '../../domain/repositories/room.repository.js';
+import { type IRoomRepository } from '../../domain/repositories/room.repository.js';
 
 describe('RoomGateway', () => {
   let gateway: RoomGateway;
@@ -80,7 +80,10 @@ describe('RoomGateway', () => {
       ]);
       mockCreateRoomUseCase.execute.mockResolvedValue(room);
 
-      await gateway.handleCreateRoom(mockSocket, { name: 'My Room', ruleset: 'riichi' });
+      await gateway.handleCreateRoom(mockSocket, {
+        name: 'My Room',
+        ruleset: 'riichi',
+      });
 
       expect(mockCreateRoomUseCase.execute).toHaveBeenCalledWith({
         hostId: 'user-1',
@@ -92,9 +95,14 @@ describe('RoomGateway', () => {
     });
 
     it('should emit error when room creation fails', async () => {
-      mockCreateRoomUseCase.execute.mockRejectedValue(new Error('Failed to create'));
+      mockCreateRoomUseCase.execute.mockRejectedValue(
+        new Error('Failed to create'),
+      );
 
-      await gateway.handleCreateRoom(mockSocket, { name: 'My Room', ruleset: 'riichi' });
+      await gateway.handleCreateRoom(mockSocket, {
+        name: 'My Room',
+        ruleset: 'riichi',
+      });
 
       expect(mockSocket.emit).toHaveBeenCalledWith('error', 'Failed to create');
     });
@@ -121,12 +129,19 @@ describe('RoomGateway', () => {
 
   describe('lobby:join_queue', () => {
     it('should handle joining queue and broadcast match_found if match starts', async () => {
-      const room = new Room('r-123', 'Matchmaking Room', 'user-1', 'riichi', 'waiting', [
-        new RoomPlayer('user-1', 'Host', null, 1000, false),
-        new RoomPlayer('user-2', 'P2', null, 1000, false),
-        new RoomPlayer('user-3', 'P3', null, 1000, false),
-        new RoomPlayer('user-4', 'P4', null, 1000, false),
-      ]);
+      const room = new Room(
+        'r-123',
+        'Matchmaking Room',
+        'user-1',
+        'riichi',
+        'waiting',
+        [
+          new RoomPlayer('user-1', 'Host', null, 1000, false),
+          new RoomPlayer('user-2', 'P2', null, 1000, false),
+          new RoomPlayer('user-3', 'P3', null, 1000, false),
+          new RoomPlayer('user-4', 'P4', null, 1000, false),
+        ],
+      );
       mockLobbyService.joinQueue.mockResolvedValue(room);
 
       await gateway.handleJoinQueue(mockSocket);

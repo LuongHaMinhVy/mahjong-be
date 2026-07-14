@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument */
 import {
   WebSocketGateway,
   WebSocketServer,
@@ -9,7 +9,7 @@ import {
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { UseGuards, Logger, Inject } from '@nestjs/common';
+import { UseGuards, Logger } from '@nestjs/common';
 import { WsAuthGuard } from '../../../../shared/websocket/ws-auth.guard.js';
 import { CreateRoomUseCase } from '../../application/use-cases/create-room.use-case.js';
 import { JoinRoomUseCase } from '../../application/use-cases/join-room.use-case.js';
@@ -135,7 +135,9 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
       } else {
         // Room was deleted because it is empty
-        this.server.to(data.roomId).emit('room:deleted', { roomId: data.roomId });
+        this.server
+          .to(data.roomId)
+          .emit('room:deleted', { roomId: data.roomId });
       }
     } catch (err: any) {
       this.logger.error(`Room leave failed: ${err.message}`);
@@ -186,13 +188,17 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @UseGuards(WsAuthGuard)
   @SubscribeMessage('lobby:join_queue')
-  async handleJoinQueue(@ConnectedSocket() client: Socket & { user: JwtPayload }) {
+  async handleJoinQueue(
+    @ConnectedSocket() client: Socket & { user: JwtPayload },
+  ) {
     const userId = client.user.sub;
     try {
       const room = await this.lobbyService.joinQueue(userId);
       if (room) {
         // Match found!
-        this.server.to(room.id).emit('lobby:match_found', this.formatRoom(room));
+        this.server
+          .to(room.id)
+          .emit('lobby:match_found', this.formatRoom(room));
       } else {
         client.emit('lobby:queue_joined');
       }
@@ -204,7 +210,9 @@ export class RoomGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @UseGuards(WsAuthGuard)
   @SubscribeMessage('lobby:leave_queue')
-  async handleLeaveQueue(@ConnectedSocket() client: Socket & { user: JwtPayload }) {
+  async handleLeaveQueue(
+    @ConnectedSocket() client: Socket & { user: JwtPayload },
+  ) {
     const userId = client.user.sub;
     try {
       await this.lobbyService.leaveQueue(userId);

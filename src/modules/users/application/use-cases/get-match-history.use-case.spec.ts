@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
 import { GetMatchHistoryUseCase } from './get-match-history.use-case.js';
-import { IUserStatsRepository } from '../../domain/repositories/user-stats.repository.js';
+import { type IUserStatsRepository } from '../../domain/repositories/user-stats.repository.js';
 import { GameResult } from '../../../mahjong/domain/entities/game-result.entity.js';
 
 describe('GetMatchHistoryUseCase', () => {
@@ -32,7 +32,7 @@ describe('GetMatchHistoryUseCase', () => {
             isWinner: true,
           },
         ],
-        new Date()
+        new Date(),
       ),
     ];
 
@@ -40,7 +40,11 @@ describe('GetMatchHistoryUseCase', () => {
 
     const result = await useCase.execute('user-123', { limit: 10, offset: 0 });
 
-    expect(mockUserStatsRepo.getMatchHistory).toHaveBeenCalledWith('user-123', 10, 0);
+    expect(mockUserStatsRepo.getMatchHistory).toHaveBeenCalledWith(
+      'user-123',
+      10,
+      0,
+    );
     expect(result).toEqual(mockResults);
   });
 });

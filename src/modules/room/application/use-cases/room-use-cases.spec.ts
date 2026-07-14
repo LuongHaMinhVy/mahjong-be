@@ -3,10 +3,10 @@ import { JoinRoomUseCase } from './join-room.use-case.js';
 import { LeaveRoomUseCase } from './leave-room.use-case.js';
 import { ToggleReadyUseCase } from './toggle-ready.use-case.js';
 import { StartGameUseCase } from './start-game.use-case.js';
-import { Room } from '../../domain/entities/room.entity.js';
+import { type Room } from '../../domain/entities/room.entity.js';
 import { RoomPlayer } from '../../domain/value-objects/room-player.vo.js';
-import { IRoomRepository } from '../../domain/repositories/room.repository.js';
-import { IUserRepository } from '../../../auth/domain/user.repository.js';
+import { type IRoomRepository } from '../../domain/repositories/room.repository.js';
+import { type IUserRepository } from '../../../auth/domain/user.repository.js';
 import { User } from '../../../auth/domain/user.entity.js';
 import { Email } from '../../../auth/domain/value-objects/email.vo.js';
 import { Password } from '../../../auth/domain/value-objects/password.vo.js';
@@ -27,7 +27,9 @@ class MockRoomRepository implements IRoomRepository {
   }
 
   async findAllWaiting(): Promise<Room[]> {
-    return Array.from(this.rooms.values()).filter((r) => r.status === 'waiting');
+    return Array.from(this.rooms.values()).filter(
+      (r) => r.status === 'waiting',
+    );
   }
 }
 
@@ -190,33 +192,77 @@ describe('Room Use Cases', () => {
         isReady: true,
       });
 
-      expect(updated.players.find((p) => p.userId === 'user-2')?.isReady).toBe(true);
+      expect(updated.players.find((p) => p.userId === 'user-2')?.isReady).toBe(
+        true,
+      );
     });
   });
 
   describe('StartGameUseCase', () => {
     it('should start game if host calls and everyone else is ready and room has 4 players', async () => {
       // Mock other players
-      userRepo.users.set('u3', new User({ id: 'u3', email: new Email('t3@t.com'), password: Password.create('password123'), displayName: 'P3', elo: 1000 }));
-      userRepo.users.set('u4', new User({ id: 'u4', email: new Email('t4@t.com'), password: Password.create('password123'), displayName: 'P4', elo: 1000 }));
+      userRepo.users.set(
+        'u3',
+        new User({
+          id: 'u3',
+          email: new Email('t3@t.com'),
+          password: Password.create('password123'),
+          displayName: 'P3',
+          elo: 1000,
+        }),
+      );
+      userRepo.users.set(
+        'u4',
+        new User({
+          id: 'u4',
+          email: new Email('t4@t.com'),
+          password: Password.create('password123'),
+          displayName: 'P4',
+          elo: 1000,
+        }),
+      );
 
-      const room = await createRoomUseCase.execute({ hostId: 'user-1', name: 'R', ruleset: 'riichi' });
+      const room = await createRoomUseCase.execute({
+        hostId: 'user-1',
+        name: 'R',
+        ruleset: 'riichi',
+      });
       await joinRoomUseCase.execute({ userId: 'user-2', roomId: room.id });
       await joinRoomUseCase.execute({ userId: 'u3', roomId: room.id });
       await joinRoomUseCase.execute({ userId: 'u4', roomId: room.id });
 
-      await toggleReadyUseCase.execute({ userId: 'user-2', roomId: room.id, isReady: true });
-      await toggleReadyUseCase.execute({ userId: 'u3', roomId: room.id, isReady: true });
-      await toggleReadyUseCase.execute({ userId: 'u4', roomId: room.id, isReady: true });
+      await toggleReadyUseCase.execute({
+        userId: 'user-2',
+        roomId: room.id,
+        isReady: true,
+      });
+      await toggleReadyUseCase.execute({
+        userId: 'u3',
+        roomId: room.id,
+        isReady: true,
+      });
+      await toggleReadyUseCase.execute({
+        userId: 'u4',
+        roomId: room.id,
+        isReady: true,
+      });
 
-      const started = await startGameUseCase.execute({ hostId: 'user-1', roomId: room.id });
+      const started = await startGameUseCase.execute({
+        hostId: 'user-1',
+        roomId: room.id,
+      });
       expect(started.status).toBe('playing');
     });
 
     it('should throw if non-host tries to start', async () => {
-      const room = await createRoomUseCase.execute({ hostId: 'user-1', name: 'R', ruleset: 'riichi' });
-      await expect(startGameUseCase.execute({ hostId: 'user-2', roomId: room.id }))
-        .rejects.toThrow();
+      const room = await createRoomUseCase.execute({
+        hostId: 'user-1',
+        name: 'R',
+        ruleset: 'riichi',
+      });
+      await expect(
+        startGameUseCase.execute({ hostId: 'user-2', roomId: room.id }),
+      ).rejects.toThrow();
     });
   });
 });

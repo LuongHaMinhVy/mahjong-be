@@ -1,4 +1,4 @@
-import { Room } from '../entities/room.entity.js';
+import { type Room } from '../entities/room.entity.js';
 
 export abstract class IRoomRepository {
   abstract save(room: Room): Promise<void>;

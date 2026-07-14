@@ -2,7 +2,7 @@ import { jest } from '@jest/globals';
 import { RedisRoomRepository } from './redis-room.repository.js';
 import { Room } from '../../domain/entities/room.entity.js';
 import { RoomPlayer } from '../../domain/value-objects/room-player.vo.js';
-import { Redis } from 'ioredis';
+import { type Redis } from 'ioredis';
 
 describe('RedisRoomRepository', () => {
   let repository: RedisRoomRepository;
@@ -35,7 +35,7 @@ describe('RedisRoomRepository', () => {
       }),
     };
 
-    repository = new RedisRoomRepository(mockRedis as unknown as Redis);
+    repository = new RedisRoomRepository(mockRedis);
   });
 
   it('should save and find a room by id', async () => {

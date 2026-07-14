@@ -30,11 +30,6 @@ const USE_CASES = [
     LobbyService,
     RoomGateway,
   ],
-  exports: [
-    IRoomRepository,
-    ...USE_CASES,
-    LobbyService,
-    RoomGateway,
-  ],
+  exports: [IRoomRepository, ...USE_CASES, LobbyService, RoomGateway],
 })
 export class RoomModule {}

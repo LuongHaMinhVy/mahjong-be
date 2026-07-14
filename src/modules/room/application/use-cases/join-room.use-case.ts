@@ -1,7 +1,7 @@
-import { Room } from '../../domain/entities/room.entity.js';
+import { type Room } from '../../domain/entities/room.entity.js';
 import { RoomPlayer } from '../../domain/value-objects/room-player.vo.js';
-import { IRoomRepository } from '../../domain/repositories/room.repository.js';
-import { IUserRepository } from '../../../auth/domain/user.repository.js';
+import { type IRoomRepository } from '../../domain/repositories/room.repository.js';
+import { type IUserRepository } from '../../../auth/domain/user.repository.js';
 import { NotFoundException } from '../../../../shared/exceptions/domain.exception.js';
 
 export interface JoinRoomInput {

@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
 import { PrismaUserStatsRepository } from './prisma-user-stats.repository.js';
-import { PrismaService } from '../../../../shared/database/prisma.service.js';
+import { type PrismaService } from '../../../../shared/database/prisma.service.js';
 
 describe('PrismaUserStatsRepository', () => {
   let repository: PrismaUserStatsRepository;
