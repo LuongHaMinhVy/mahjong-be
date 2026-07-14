@@ -2,8 +2,8 @@ import { User } from './user.entity.js';
 import { Email } from './value-objects/email.vo.js';
 import { Password } from './value-objects/password.vo.js';
 
-describe('User Entity Locale', () => {
-  it('should support locale preference and fallback to vi', () => {
+describe('User Entity Settings', () => {
+  it('should initialize with default settings', () => {
     const user = new User({
       id: '1',
       email: new Email('test@example.com'),
@@ -16,21 +16,30 @@ describe('User Entity Locale', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-    expect(user.locale).toBe('vi');
-    
-    const userWithEn = new User({
-      id: '2',
-      email: new Email('en@example.com'),
+    expect(user.settings.locale).toBe('vi');
+    expect(user.settings.soundEnabled).toBe(true);
+  });
+
+  it('should allow updating settings and validate locale', () => {
+    const user = new User({
+      id: '1',
+      email: new Email('test@example.com'),
       password: Password.fromHash('hash'),
-      displayName: 'En User',
+      displayName: 'Test User',
       elo: 1000,
       isEmailVerified: true,
       role: 'USER',
       bannedUntil: null,
-      locale: 'en',
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-    expect(userWithEn.locale).toBe('en');
+
+    user.settings.updateLocale('en');
+    expect(user.settings.locale).toBe('en');
+
+    user.settings.updateSoundEnabled(false);
+    expect(user.settings.soundEnabled).toBe(false);
+
+    expect(() => user.settings.updateLocale('invalid')).toThrow();
   });
 });

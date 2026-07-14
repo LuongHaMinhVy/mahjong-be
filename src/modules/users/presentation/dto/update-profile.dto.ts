@@ -1,4 +1,4 @@
-import { IsString, IsOptional, MinLength } from 'class-validator';
+import { IsString, IsOptional, MinLength, IsIn, IsBoolean } from 'class-validator';
 
 export class UpdateProfileDto {
   @IsOptional()
@@ -9,4 +9,13 @@ export class UpdateProfileDto {
   @IsOptional()
   @IsString()
   avatar?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['vi', 'en', 'ja', 'zh'])
+  locale?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  soundEnabled?: boolean;
 }

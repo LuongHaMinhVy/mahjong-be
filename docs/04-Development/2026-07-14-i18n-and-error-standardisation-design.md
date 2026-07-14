@@ -16,10 +16,10 @@ Thiết lập hệ thống đa ngôn ngữ (i18n) nhẹ và chuẩn hóa cấu t
 ---
 
 ## 2. Thiết kế Cơ sở Dữ liệu & Domain
-1.  **Cập nhật thực thể User (Prisma & Domain):**
-    *   Thêm cột `locale` vào bảng `User` để lưu cấu hình ngôn ngữ ưu thích của người chơi.
-    *   Các giá trị được chấp nhận: `en`, `vi`, `ja`, `zh`. Giá trị mặc định là `vi`.
-    *   Cập nhật Domain Entity `User` để có thuộc tính `locale: string`.
+1.  **Bảng UserSetting (Prisma & Domain):**
+    *   Tạo bảng `UserSetting` riêng biệt liên kết 1-1 với bảng `User`.
+    *   Bảng `UserSetting` bao gồm các trường: `id`, `userId` (unique), `locale` (mặc định là `'vi'`), và `soundEnabled` (mặc định là `true`).
+    *   Thực thể Domain `User` sẽ có thuộc tính `settings` kiểu `UserSettings` chứa cấu hình này, tách biệt phần Identity của User với phần cấu hình UI/Game settings.
 
 ---
 

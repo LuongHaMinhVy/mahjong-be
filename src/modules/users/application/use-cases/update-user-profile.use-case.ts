@@ -6,6 +6,8 @@ export interface UpdateUserProfileRequest {
   userId: string;
   displayName?: string;
   avatar?: string | null;
+  locale?: string;
+  soundEnabled?: boolean;
 }
 
 export interface UpdateUserProfileResponse {
@@ -14,6 +16,8 @@ export interface UpdateUserProfileResponse {
   displayName: string;
   avatar: string | null;
   elo: number;
+  locale: string;
+  soundEnabled: boolean;
   updatedAt: Date;
 }
 
@@ -37,6 +41,14 @@ export class UpdateUserProfileUseCase {
       user.updateAvatar(request.avatar);
     }
 
+    if (request.locale !== undefined) {
+      user.settings.updateLocale(request.locale);
+    }
+
+    if (request.soundEnabled !== undefined) {
+      user.settings.updateSoundEnabled(request.soundEnabled);
+    }
+
     await this.userRepo.save(user);
 
     return {
@@ -45,6 +57,8 @@ export class UpdateUserProfileUseCase {
       displayName: user.displayName,
       avatar: user.avatar,
       elo: user.elo,
+      locale: user.settings.locale,
+      soundEnabled: user.settings.soundEnabled,
       updatedAt: user.updatedAt,
     };
   }

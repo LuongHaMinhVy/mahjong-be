@@ -17,15 +17,25 @@ model User {
   avatar          String?
   elo             Int            @default(1000)
   role            String         @default("USER")
-  locale          String         @default("vi")
   isEmailVerified Boolean        @default(false) @map("is_email_verified")
   bannedUntil     DateTime?      @map("banned_until")
   createdAt       DateTime       @default(now()) @map("created_at")
   updatedAt       DateTime       @updatedAt @map("updated_at")
   refreshTokens   RefreshToken[]
   gameResults     GameResult[]   @relation("WinnerRelation")
+  settings        UserSetting?
 
   @@map("users")
+}
+
+model UserSetting {
+  id           String  @id @default(uuid())
+  userId       String  @unique @map("user_id")
+  locale       String  @default("vi")
+  soundEnabled Boolean @default(true) @map("sound_enabled")
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
 }
 
 model RefreshToken {

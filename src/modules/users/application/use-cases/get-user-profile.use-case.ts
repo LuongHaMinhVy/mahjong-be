@@ -10,6 +10,8 @@ export interface UserProfileResponse {
   displayName: string;
   avatar: string | null;
   elo: number;
+  locale: string;
+  soundEnabled: boolean;
   createdAt: Date;
   stats: UserStats;
 }
@@ -35,8 +37,10 @@ export class GetUserProfileUseCase {
       displayName: user.displayName,
       avatar: user.avatar,
       elo: user.elo,
+      locale: user.settings.locale,
+      soundEnabled: user.settings.soundEnabled,
       createdAt: user.createdAt,
-      stats,
+      stats: stats,
     };
   }
 }

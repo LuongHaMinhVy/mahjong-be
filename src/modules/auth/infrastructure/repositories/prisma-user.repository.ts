@@ -20,8 +20,19 @@ export class PrismaUserRepository implements IUserRepository {
         elo: raw.elo,
         isEmailVerified: raw.isEmailVerified,
         role: raw.role,
-        locale: raw.locale,
         bannedUntil: raw.bannedUntil,
+        settings: {
+          upsert: {
+            create: {
+              locale: raw.settings.locale,
+              soundEnabled: raw.settings.soundEnabled,
+            },
+            update: {
+              locale: raw.settings.locale,
+              soundEnabled: raw.settings.soundEnabled,
+            },
+          },
+        },
       },
       create: {
         id: raw.id,
@@ -32,8 +43,16 @@ export class PrismaUserRepository implements IUserRepository {
         elo: raw.elo,
         isEmailVerified: raw.isEmailVerified,
         role: raw.role,
-        locale: raw.locale,
         bannedUntil: raw.bannedUntil,
+        settings: {
+          create: {
+            locale: raw.settings.locale,
+            soundEnabled: raw.settings.soundEnabled,
+          },
+        },
+      },
+      include: {
+        settings: true,
       },
     });
 
@@ -43,6 +62,7 @@ export class PrismaUserRepository implements IUserRepository {
   async findById(id: string): Promise<User | null> {
     const raw = await this.prisma.user.findUnique({
       where: { id },
+      include: { settings: true },
     });
     if (!raw) return null;
     return UserMapper.toDomain(raw);
@@ -51,6 +71,7 @@ export class PrismaUserRepository implements IUserRepository {
   async findByEmail(email: string): Promise<User | null> {
     const raw = await this.prisma.user.findUnique({
       where: { email: email.toLowerCase() },
+      include: { settings: true },
     });
     if (!raw) return null;
     return UserMapper.toDomain(raw);
@@ -78,6 +99,7 @@ export class PrismaUserRepository implements IUserRepository {
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
+        include: { settings: true },
       }),
       this.prisma.user.count({ where }),
     ]);

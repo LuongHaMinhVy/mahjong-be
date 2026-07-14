@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto';
 import { type Email } from './value-objects/email.vo.js';
 import { type Password } from './value-objects/password.vo.js';
 import { DomainException } from '../../../shared/exceptions/domain.exception.js';
+import { UserSettings, type UserSettingsProps } from './user-settings.js';
 
 export interface UserProps {
   id?: string;
@@ -12,7 +13,7 @@ export interface UserProps {
   elo?: number;
   isEmailVerified?: boolean;
   role?: string;
-  locale?: string;
+  settings?: UserSettingsProps;
   bannedUntil?: Date | null;
   createdAt?: Date;
   updatedAt?: Date;
@@ -27,7 +28,7 @@ export class User {
   private _elo: number;
   private _isEmailVerified: boolean;
   private _role: string;
-  private _locale: string;
+  private _settings: UserSettings;
   private _bannedUntil: Date | null;
   private readonly _createdAt: Date;
   private _updatedAt: Date;
@@ -41,7 +42,7 @@ export class User {
     this._elo = props.elo ?? 1000;
     this._isEmailVerified = props.isEmailVerified ?? false;
     this._role = props.role || 'USER';
-    this._locale = props.locale || 'vi';
+    this._settings = new UserSettings(props.settings || { locale: 'vi', soundEnabled: true });
     this._bannedUntil = props.bannedUntil || null;
     this._createdAt = props.createdAt || new Date();
     this._updatedAt = props.updatedAt || new Date();
@@ -91,8 +92,8 @@ export class User {
     return this._bannedUntil;
   }
 
-  get locale(): string {
-    return this._locale;
+  get settings(): UserSettings {
+    return this._settings;
   }
 
   public verifyEmail(): void {
