@@ -94,7 +94,7 @@
 | 91  | Replay - Module Registration                                           | completed |
 | 92  | Replay - Final Verification & Test Cleanup                             | completed |
 | 93  | Riichi - Domain Layer - Add isTenpai helper in RiichiRuleset           | completed |
-| 94  | Riichi - Application Layer - Create DeclareRiichiUseCase               | pending   |
+| 94  | Riichi - Application Layer - Create DeclareRiichiUseCase               | completed |
 | 95  | Riichi - Presentation Layer - Map game:riichi in GameGateway           | pending   |
 | 96  | Riichi - Module Registration - Register DeclareRiichiUseCase           | pending   |
 | 97  | Riichi - Final Verification & Test Cleanup                             | pending   |
